@@ -14,26 +14,17 @@ const LeftSide = () => {
           <header className="flex flex-col lg:flex-row justify-start lg:justify-start items-start w-full gap-4 lg:gap-0 mb-2">
             {/* Menu Item - Hidden on mobile, shown on larger screens */}
             <div className="hidden lg:flex items-center justify-start bg-gradient-to-r from-white/30 to-gray-200/30 rounded-base px-1 py-1 shadow-md">
-              <img 
-                src="/images/img_icon.svg" 
-                alt="Menu icon"
-                className="w-[24px] h-[24px]"
-              />
               <span className="text-md font-normal leading-lg text-white ml-3">
                 Create
               </span>
-              <img 
-                src="/images/img_icon_gray_100_01.svg" 
-                alt="Additional icon"
-                className="w-[24px] h-[24px] ml-9"
-              />
+              <i className="fa-solid fa-circle-chevron-right"></i>
+             <i className="fa-solid fa-gear"></i>
             </div>
           </header>
         </div>
 
         {/* Mini Calendar Container */}
         <MiniCalendar 
-          month="Month 2000"
           width="w-full max-w-[304px] lg:max-w-none"
           height="h-[254px]"
         />
@@ -50,11 +41,7 @@ const LeftSide = () => {
                 <span className="text-lg font-normal leading-2xl text-white">
                   My calendars   
                 </span>
-                <img 
-                  src="/images/img_arrow_down.svg" 
-                  alt="Toggle my calendars"
-                  className={`w-[24px] h-[24px] transition-transform ${myCalendarsOpen ? 'rotate-0' : 'rotate-180'}`}
-                />
+               <i className={`fa-solid fa-chevron-down  transition-transform ${myCalendarsOpen ? 'rotate-0' : 'rotate-180'}`}></i>
               </div>
               
               {myCalendarsOpen && (
@@ -73,11 +60,7 @@ const LeftSide = () => {
                       size="md"
                       id="main-calendar"
                     />
-                    <img 
-                      src="/images/img_frame_16.svg" 
-                      alt="Options"
-                      className="w-[4px] h-[4px] mt-2"
-                    />
+                   <i class="fa-solid fa-ellipsis-vertical"></i>
                   </div>
                   
                   <div className="flex justify-between items-start w-full pl-2 py-1">
@@ -94,11 +77,7 @@ const LeftSide = () => {
                       size="md"
                       id="khpi-calendar"
                     />
-                    <img 
-                      src="/images/img_frame_16.svg" 
-                      alt="Options"
-                      className="w-[4px] h-[4px]"
-                    />
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
                   </div>
                 </>
               )}
@@ -136,11 +115,7 @@ const LeftSide = () => {
                       size="md"
                       id="feiertage-calendar"
                     />
-                    <img 
-                      src="/images/img_frame_16.svg" 
-                      alt="Options"
-                      className="w-[4px] h-[4px] mt-2"
-                    />
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
                   </div>
                   
                   <div className="flex justify-start items-start w-full pl-2 py-1">
@@ -158,11 +133,7 @@ const LeftSide = () => {
                         teams
                       </span>
                     </div>
-                    <img 
-                      src="/images/img_frame_16.svg" 
-                      alt="Options"
-                      className="w-[4px] h-[4px]"
-                    />
+                   <i class="fa-solid fa-ellipsis-vertical"></i>
                   </div>
                 </>
               )}

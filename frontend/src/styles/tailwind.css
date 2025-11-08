@@ -195,3 +195,19 @@
     --search-width: var(--width-base);
   }
 }
+
+@layer utilities {
+  /* Custom color utilities (optional) */
+  .bg-primary {
+    background-color: var(--primary-background);
+  }
+  .text-primary {
+    color: var(--text-primary);
+  }
+  .bg-accent {
+    background-color: var(--bg-accent);
+  }
+  .text-accent {
+    color: var(--bg-accent);
+  }
+}
