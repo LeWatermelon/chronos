@@ -21,6 +21,11 @@ import handleLogin from "./controllers/authentication/login.js";
 import handleLogout from "./controllers/authentication/logout.js";
 import handlePasswordReset from "./controllers/authentication/passwordReset.js";
 import handlePasswordResetConfirm from "./controllers/authentication/passwordResetConfirm.js";
+// ~~~ Calendar ~~~
+import handleCreateCalendar from "./controllers/calendar/createCalendar.js";
+import handleGetCalendars from "./controllers/calendar/getCalendars.js";
+import handleUpdateCalendar from "./controllers/calendar/updateCalendar.js";
+import handleDeleteCalendar from "./controllers/calendar/deleteCalendar.js";
 
 // middleware
 import requireAuth from "./middleware/requireAuth.js";
@@ -49,6 +54,7 @@ async function start() {
     app.get('/', (req, res) => {    
         res.send('getting root');
     });
+    app.get('/api/calendars', requireAuth, (req, res) => { handleGetCalendars(req, res) });
 
     // === POST Requests ===
     app.post('/api/auth/register', (req, res) => { handleRegister(req, res, bcrypt, nodemailer) });
@@ -57,10 +63,13 @@ async function start() {
     app.post('/api/auth/logout', requireAuth, (req, res) => { handleLogout(req, res) });
     app.post('/api/auth/password-reset', (req, res) => { handlePasswordReset(req, res, crypto, nodemailer) });
     app.post('/api/auth/password-reset/:confirm_token', (req, res) => { handlePasswordResetConfirm(req, res, bcrypt, crypto) });
+    app.post('/api/calendar', requireAuth, (req, res) => { handleCreateCalendar(req, res) });
 
     // === PATCH Requests ===
+    app.patch('/api/calendars/:id', requireAuth, (req, res) => { handleUpdateCalendar(req, res) });
 
     // === DELETE Requests ===
+    app.delete('/api/calendars/:id', requireAuth, (req, res) => { handleDeleteCalendar(req, res) })
 
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);

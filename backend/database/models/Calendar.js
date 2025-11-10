@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
 
 const CalendarSchema = new mongoose.Schema({
-    user_id: { 
+    owner: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User', 
         required: true 
     },
-    name: { 
+    title: { 
         type: String, 
         required: true 
     },
@@ -14,9 +14,9 @@ const CalendarSchema = new mongoose.Schema({
         type: String, 
         default: '#2196F3' // цвет для UI
     },
-    is_default: { 
+    is_visible: { 
         type: Boolean, 
-        default: false 
+        default: true 
     },
 }, { timestamps: true });
 
