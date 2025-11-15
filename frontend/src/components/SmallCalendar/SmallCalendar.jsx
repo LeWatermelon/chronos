@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import "./SmallCalendar.css";
 
-export default function SmallCalendar() {
+export default function SmallCalendar({ variant='default', year, month }) {
   const today = new Date();
-  const [currMonth, setCurrMonth] = useState(today.getMonth());
-  const [currYear, setCurrYear] = useState(today.getFullYear());
+  // const currMonth = variant === "inCalendar" ? month : (month ?? today.getMonth());
+  // const currYear = variant === "inCalendar" ? year : (year ?? today.getFullYear());
 
+  const [currMonth, setCurrMonth] = useState(month ?? today.getMonth()); 
+  const [currYear, setCurrYear] = useState(year ?? today.getFullYear());
   const months = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
@@ -51,10 +53,11 @@ export default function SmallCalendar() {
 
     return days;
   }
-
   const days = getDays();
-  console.log(days)
+
   const handlePrevNext = (direction) => {
+    if (variant === "inCalendar") return;
+
     let newMonth = direction === "prev" ? currMonth - 1 : currMonth + 1;
     let newYear = currYear;
 
@@ -71,26 +74,25 @@ export default function SmallCalendar() {
   };
 
   return (
-    <div className="calendar-box">
+   <div className={`calendar-box ${variant}`}>
       <div className="calendar-inner">
 
         {/* Header */}
         <div className="calendar-header">
           <div className="calendar-header-left">
             <h2 className="calendar-month">
-              {months[currMonth]} {currYear}
+              {months[currMonth]} 
+              {variant === "default" && (<span> {currYear}</span>)}
             </h2>
           </div>
 
           <div className="calendar-header-right">
-            <i
-              className="fa-solid fa-chevron-left calendar-arrow"
-              onClick={() => handlePrevNext("prev")}
-            ></i>
-            <i
-              className="fa-solid fa-chevron-right calendar-arrow"
-              onClick={() => handlePrevNext("next")}
-            ></i>
+            {variant === "default" && (
+              <>
+                <i className="fa-solid fa-chevron-left calendar-arrow" onClick={() => handlePrevNext("prev")}></i>
+                <i className="fa-solid fa-chevron-right calendar-arrow" onClick={() => handlePrevNext("next")}></i>
+              </>
+            )}
           </div>
         </div>
 
@@ -113,7 +115,8 @@ export default function SmallCalendar() {
             </li>
           ))}
         </ul>
+
       </div>
     </div>
-  );
+  )
 }

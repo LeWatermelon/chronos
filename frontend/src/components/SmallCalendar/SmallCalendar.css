@@ -11,12 +11,25 @@
   overflow: -moz-hidden-unscrollable;
 }
 
+.calendar-box.inCalendar{
+    position: relative;
+    min-height: 180px;
+    max-height: max-content;
+    /* mb-6 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    /* background: linear-gradient(to bottom, rgba(255, 255, 255, 0.834), transparent); */
+    /* border: 1px solid rgba(255, 255, 255, 0.2); */
+    border-radius: 1em;
+    /* overflow: -moz-hidden-unscrollable; */
+    margin: 5px;
+}
+
 .calendar-inner {
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: start;
-  padding: 0.5em 1em;
+  padding: 0.5em 0.5em;
   /* py-2 px-5 */
 }
 
@@ -35,6 +48,9 @@
   flex: 1;
   align-items: start;
 }
+.calendar-box.inCalendar .calendar-header-left{
+  height: 1rem;
+}
 
 .calendar-header-right {
   display: flex;
@@ -44,17 +60,32 @@
   margin-top: 0.25rem;
 }
 
-.calendar-month {
-  font-size: 1.125rem;
+.calendar-box.inCalendar .calendar-header-right{
+  display: none;
+}
+
+.calendar-month, span{
+  font-size: (0.8em, 1.125em, 1.125rem);
   font-weight: 700;
   line-height: 1.8rem;
   color: var(--text-white);
+}
+
+.calendar-box.inCalendar .calendar-month {
+  font-size: 1em;
+  font-weight: 600;
+  line-height: 1.5rem;
+  color: var(--text-white);
+  margin-bottom: 2em;
 }
 
 .calendar-arrow {
   width: 4px;
   height: 10px;
   color: var(--text-white);
+}
+.calendar-box.inCalendar .calendar-arrow {
+  display: none;
 }
 
 /* inner inf */
@@ -70,7 +101,12 @@
 .calendar-inner li {
   color: #333;
   width: calc(100% / 7);
-  font-size: 0.9em;
+  font-size: 0.8em;
+}
+
+.calendar-box.inCalendar .calendar-inner li{
+  font-size: 0.8em;
+  width: calc(100% / 7);
 }
 
 .weeks {
@@ -93,6 +129,9 @@
   margin-top: 20px;
 }
 
+.calendar-box.inCalendar .days li{
+  margin-top: 10px;
+}
 .days li.inactive {
   color: #126085;
 }
@@ -123,10 +162,3 @@
 .days {
   margin-bottom: 18px;
 }
-/* .days span {
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5rem;
-  color: var(--text-light);
-  text-align: center;
-} */

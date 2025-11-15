@@ -1,8 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-export default function DayView() {
+export default function DayView({ onDateChange, currentDate }) {
   const [selectedCells, setSelectedCells] = useState(new Set());
 
+  useEffect(() => {
+    onDateChange({
+      year: currentDate.getFullYear(),
+      month: currentDate.getMonth(),
+       day: currentDate.getDate(), // week view doesn't have a single day
+    });
+  }, [currentDate]); 
+
+  // useEffect(() => {
+  //   onDateChange({
+  //     year: today.getFullYear(),
+  //     month: today.getMonth(),
+  //     day: today.getDate(),
+  //   });
+  // }, []);
+  
   const handleCellClick = (timeSlot, dayIndex) => {
     const cellKey = `${timeSlot}-${dayIndex}`;
     setSelectedCells(prev => {

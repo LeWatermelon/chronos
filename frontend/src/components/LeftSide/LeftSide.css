@@ -1,5 +1,5 @@
 .left-side {
-  width: 30%;
+  width: 20%;
   margin-bottom: 1.75rem;
   /* mb-7 */
   position: relative;
@@ -15,6 +15,7 @@
   width: 100%;
   padding: 1rem;
 }
+
 
 .header {
   display: flex;
@@ -55,9 +56,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: 85%;
   cursor: pointer;
-  padding: 0 0.5rem;
+  margin: 0;
 }
 
 .calendar-header span {
@@ -65,6 +66,7 @@
   font-weight: 400;
   line-height: 2rem;
   color: white;
+  
 }
 
 /* .rotate-180 {
@@ -79,9 +81,10 @@
   display: flex;
   justify-content: space-between;
   align-items: start;
-  width: 100%;
+  width: 90%;
   padding-left: 0.5rem;
   padding-top: 0.25rem;
+  inset: -1em;
 }
 
 .collapse-btn {
@@ -111,7 +114,7 @@
 
 @media (min-width: 1024px) {
   .left-side {
-    width: 30%;
+    width: 25%;
     flex-shrink: 0;
     margin-bottom: 0;
   }
@@ -124,5 +127,11 @@
   }
   .left-side.collapsed {
     width: 50px;
+  }
+}
+
+@media (max-width: 960px){
+  .smallCalendar{
+    display: none; 
   }
 }

@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import './WeekCalendar.css'
 
-export default function WeekView({ onDateChange,  currentDate }) {
+export default function DayView({ onDateChange }) {
+  const today = new Date();
+
   useEffect(() => {
     onDateChange({
-      year:  currentDate.getFullYear(),
-      month:  currentDate.getMonth(),
-      day: '',
+      year: today.getFullYear(),
+      month: today.getMonth(),
+      day: today.getDate(),
     });
-  }, [ currentDate]);
+  }, []);
 
   const [selectedCells, setSelectedCells] = useState(new Set());
-
+  
   const handleCellClick = (timeSlot, dayIndex) => {
     const cellKey = `${timeSlot}-${dayIndex}`;
     setSelectedCells(prev => {
@@ -26,7 +27,7 @@ export default function WeekView({ onDateChange,  currentDate }) {
   };
 
   const renderTimeBlocks = (timeSlot) => {
-    const days = 7;
+    const days = 1;
     const blocks = [];
 
     for (let dayIndex = 0; dayIndex < days; dayIndex++) {
@@ -49,21 +50,11 @@ export default function WeekView({ onDateChange,  currentDate }) {
   '12PM',
   ...Array.from({ length: 11 }, (_, i) => `${i + 1}PM`)
 ];
-
+  
   return (
     <>
       <div className="calendar-container">
         <div className="calendar-grid">
-           <ul className="mon-weeks decoration-none">
-          <li>Sun</li>
-          <li>Mon</li>
-          <li>Tue</li>
-          <li>Wed</li>
-          <li>Thu</li>
-          <li>Fri</li>
-          <li>Sat</li>
-        </ul>
-
           {hrs.map((slot) => (
             <div key={slot} className="time-row">
               <span className="time-label">{slot}</span>

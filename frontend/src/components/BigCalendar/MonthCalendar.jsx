@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./MonthCalendar.css";
 
-export default function MonthView() {
-  const today = new Date();
-  const [currMonth, setCurrMonth] = useState(today.getMonth());
-  const [currYear, setCurrYear] = useState(today.getFullYear());
+export default function MonthView({ onDateChange,currentDate }) {
+  useEffect(() => {
+    onDateChange({
+      year:  currentDate.getFullYear(),
+      month:  currentDate.getMonth(),
+      day: '',
+    });
+  }, [ currentDate ]);
+
+  const [currMonth, setCurrMonth] = useState(currentDate.getMonth());
+  const [currYear, setCurrYear] = useState(currentDate.getFullYear());
 
   const months = [
     "January", "February", "March", "April", "May", "June",
@@ -24,20 +31,22 @@ export default function MonthView() {
     for (let i = firstDayOfMonth; i > 0; i--) {
       days.push({
         day: lastDateOfPrevMonth - i + 1,
-        className: "inactive"
+        className: "inactive",
+        events: []
       });
     }
 
     // Current month’s days
     for (let i = 1; i <= lastDateOfMonth; i++) {
       const isToday =
-        i === today.getDate() &&
-        currMonth === today.getMonth() &&
-        currYear === today.getFullYear();
+        i === currentDate.getDate() &&
+        currMonth === currentDate.getMonth() &&
+        currYear === currentDate.getFullYear();
 
       days.push({
         day: i,
-        className: isToday ? "active" : ""
+        className: isToday ? "active" : "",
+        events: [] // You can populate this with real events
       });
     }
 
@@ -45,7 +54,8 @@ export default function MonthView() {
     for (let i = lastDayOfMonth; i < 6; i++) {
       days.push({
         day: i - lastDayOfMonth + 1,
-        className: "inactive"
+        className: "inactive",
+        events: []
       });
     }
 
@@ -53,49 +63,13 @@ export default function MonthView() {
   }
 
   const days = getDays();
-  console.log(days)
-  const handlePrevNext = (direction) => {
-    let newMonth = direction === "prev" ? currMonth - 1 : currMonth + 1;
-    let newYear = currYear;
-
-    if (newMonth < 0) {
-      newMonth = 11;
-      newYear -= 1;
-    } else if (newMonth > 11) {
-      newMonth = 0;
-      newYear += 1;
-    }
-
-    setCurrMonth(newMonth);
-    setCurrYear(newYear);
-  };
 
   return (
     <div className="mon-calendar-box">
       <div className="mon-calendar-inner">
 
-        {/* Header */}
-        <div className="mon-calendar-header">
-          <div className="mon-calendar-header-left">
-            <h2 className="mon-calendar-month">
-              {months[currMonth]} {currYear}
-            </h2>
-          </div>
-
-          <div className="mon-calendar-header-right">
-            <i
-              className="fa-solid fa-chevron-left mon-calendar-arrow"
-              onClick={() => handlePrevNext("prev")}
-            ></i>
-            <i
-              className="fa-solid fa-chevron-right mon-calendar-arrow"
-              onClick={() => handlePrevNext("next")}
-            ></i>
-          </div>
-        </div>
-
         {/* Week Labels */}
-        <ul className="mon-weeks">
+        <ul className="weeks">
           <li>Sun</li>
           <li>Mon</li>
           <li>Tue</li>
@@ -109,7 +83,19 @@ export default function MonthView() {
         <ul className="mon-days">
           {days.map((dayObj, index) => (
             <li key={index} className={dayObj.className}>
-              {dayObj.day}
+              <div className="day-number">{dayObj.day}</div>
+              
+              {/* Day slots for events */}
+              <div className="day-slots">
+                {dayObj.events.length === 0 
+                  ? <span className="empty-slot">No events</span>
+                  : dayObj.events.map((event, idx) => (
+                      <div key={idx} className="event-slot">
+                        {event.title}
+                      </div>
+                  ))
+                }
+              </div>
             </li>
           ))}
         </ul>

@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  margin-bottom: 4em;
 }
 
 /* Calendar Grid */
@@ -54,4 +53,31 @@
     flex-direction: row;
     align-items: flex-start;
   }
+}
+
+.calendar-grid ul {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.calendar-grid .weeks li {
+  color: #333;
+  font-size: 1.5em;
+}
+
+.calendar-grid .weeks {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 90%;
+}
+
+.calendar-grid .weeks span {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--text-white);
 }

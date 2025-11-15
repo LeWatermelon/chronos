@@ -19,6 +19,7 @@ const LeftSide = () => {
         <i className={`fa-solid fa-chevron-left ${collapsed ? 'rotate-180' : ''}`}></i>
       </button>
 
+     {!collapsed && (
       <div className="left-side-container">
         {/* Header Section */}
         <div className="header mt-5">
@@ -30,7 +31,9 @@ const LeftSide = () => {
         </div>
 
         {/* Mini Calendar */}
-        {!collapsed && <MiniCalendar width="w-full max-w-[304px] lg:max-w-none" height="h-[254px]" />}
+        <div className="smallCalendar">
+          {!collapsed && <MiniCalendar />}
+        </div>
 
         {/* Calendar Lists */}
         {!collapsed && (
@@ -42,18 +45,18 @@ const LeftSide = () => {
                 onClick={() => setMyCalendarsOpen(!myCalendarsOpen)}
               >
                 <span>My calendars</span>
-                <i className={`fa-solid fa-chevron-down transition-transform ${myCalendarsOpen ? 'rotate-0' : 'rotate-180'}`}></i>
+                <i className={`fa-solid fa-chevron-down transition-transform calendar-arrow ${myCalendarsOpen ? 'rotate-0' : 'rotate-180'}`}></i>
               </div>
               {/* Заменить на запрос из базы */}
               {myCalendarsOpen && (
                 <>
                   <div className="calendar-item">
                     <CheckBox text="main" onChange={() => {}} id="main-calendar"/>
-                    <i className="fa-solid fa-ellipsis-vertical"></i>
+                    <i className="fa-solid fa-ellipsis-vertical calendar-arrow"></i>
                   </div>
                   <div className="calendar-item">
                     <CheckBox text="KHPI" onChange={() => {}}  id="khpi-calendar"/>
-                    <i className="fa-solid fa-ellipsis-vertical"></i>
+                    <i className="fa-solid fa-ellipsis-vertical calendar-arrow"></i>
                   </div>
                 </>
               )}
@@ -66,18 +69,18 @@ const LeftSide = () => {
                 onClick={() => setOtherCalendarsOpen(!otherCalendarsOpen)}
               >
                 <span>Other calendars</span>
-                <i className={`fa-solid fa-chevron-down transition-transform ${otherCalendarsOpen ? 'rotate-0' : 'rotate-180'}`}></i>
+                <i className={`fa-solid fa-chevron-down transition-transform calendar-arrow ${otherCalendarsOpen ? 'rotate-0' : 'rotate-180'}`}></i>
               </div>
               {otherCalendarsOpen && (
                 <>
                   <div className="calendar-item">
                     {/* Добавить апі + брать с дб  */}
                     <CheckBox text="Feiertage" onChange={() => {}} id="feiertage-calendar"/>
-                    <i className="fa-solid fa-ellipsis-vertical"></i>
+                    <i className="fa-solid fa-ellipsis-vertical calendar-arrow"></i>
                   </div>
                    <div className="calendar-item">
                     <CheckBox text="Свята" onChange={() => {}}  id="feiertage-calendar"/>
-                    <i className="fa-solid fa-ellipsis-vertical"></i>
+                    <i className="fa-solid fa-ellipsis-vertical calendar-arrow"></i>
                   </div>
                 </>
               )}
@@ -85,6 +88,7 @@ const LeftSide = () => {
           </div>
         )}
       </div>
+      )}
     </div>
   );
 };
