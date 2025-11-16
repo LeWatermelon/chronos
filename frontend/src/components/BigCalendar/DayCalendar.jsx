@@ -59,7 +59,7 @@ export default function DayView({ onDateChange, currentDate }) {
   
   return (
     <>
-      <div className="calendar-container">
+      <div className="calendar-container w-100">
         <div className="calendar-grid">
           {hrs.map((slot) => (
             <div key={slot} className="time-row">

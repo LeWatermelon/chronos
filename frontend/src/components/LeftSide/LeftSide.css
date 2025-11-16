@@ -123,7 +123,7 @@
   }
   .header {
     flex-direction: row;
-    gap: 0;
+    justify-content: space-around;
   }
   .left-side.collapsed {
     width: 50px;

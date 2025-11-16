@@ -1,16 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import CheckBox from '../ui/CheckBox/CheckBox';
 import MiniCalendar from '../SmallCalendar/SmallCalendar';
+import Popup from '../PopUp/PopUp';
+import NewEvent from '../PopUp/NewEvent';
+import NewTask from "../PopUp/NewTask";
+import NewAppointment from "../PopUp/NewAppointment";
+
 import './LeftSide.css';
 
 const LeftSide = () => {
   const [myCalendarsOpen, setMyCalendarsOpen] = useState(true);
   const [otherCalendarsOpen, setOtherCalendarsOpen] = useState(true);
+  const [newCalendarOpen, setNewCalendarOpen] = useState(false);
+  const [newEventOpen, setNewEventOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   // const [isCheked, setCheck] = useState(false);
 
   const [myCalendars, setMyCalendars] = useState([]);
   const [otherCalendars, setOtherCalendars] = useState([]);
+
+  const [popup, setPopup] = useState(null);
+  const [popupPosition, setPopupPosition] = useState({ x: 200, y: 120 });
+
+  const openPopup = (view, e) => {
+    const rect = e.target.getBoundingClientRect();
+    setPopup(view);
+    setPopupPosition({ x: rect.right + 10, y: rect.top });
+  };
 
   useEffect(() => {
     fetch("http://localhost:3000/api/calendars", {
@@ -44,18 +60,61 @@ const LeftSide = () => {
 
      {!collapsed && (
       <div className="left-side-container">
+        <div className='logo'>
+          <h1>Calendar</h1>
+        </div>
         {/* Header Section */}
         <div className="header mt-5">
-          <div className="menu-item mr-4">
-            <span className="menu-text gap-1">Create</span>
-            <i className="fa-solid fa-chevron-right"></i>
-          </div>
-            <i className="fa-solid fa-gear menu-item"></i>
+          <button className="menu-item mr-4" onClick={() => setNewEventOpen(!newEventOpen)}>
+            <span className="menu-text gap-1">Create event </span>
+            <i className={`fa-solid fa-chevron-right ${newEventOpen ? 'rotate-0' : 'rotate-180'} white`}></i>
+          </button>
+          {newEventOpen && (
+            <ul>
+              <li onClick={(e) => openPopup("event", e)}>Event</li>
+              <li onClick={(e) => openPopup("task", e)}>Task</li>
+              <li onClick={(e) => openPopup("appointment", e)}>Appointment</li>
+            </ul>
+          )}
+
+          {popup === "event" && (
+            <Popup position={popupPosition} onClose={() => setPopup(null)}>
+              <NewEvent
+                onClose={() => setPopup(null)}
+                onCreate={(data) => console.log("EVENT CREATED:", data)}
+              />
+            </Popup>
+          )}
+          {popup === "task" && (
+            <Popup position={popupPosition} onClose={() => setPopup(null)}>
+              <NewTask
+                onClose={() => setPopup(null)}
+                onCreate={(data) => console.log("EVENT CREATED:", data)}
+              />
+            </Popup>
+          )}
+           {popup === "appointment" && (
+            <Popup position={popupPosition} onClose={() => setPopup(null)}>
+              <NewAppointment
+                onClose={() => setPopup(null)}
+                onCreate={(data) => console.log("EVENT CREATED:", data)}
+              />
+            </Popup>
+          )}
+
+          <button className="menu-item mr-4">
+            <i className="fa-solid fa-gear"></i>
+          </button>
         </div>
 
         {/* Mini Calendar */}
         <div className="smallCalendar">
           {!collapsed && <MiniCalendar />}
+        </div>
+
+        <div className="gap-2"> 
+          <span className="mr-2">Add Calendar</span>
+          <i className="fa-solid fa-plus transition-transform white"></i>
         </div>
 
         {/* Calendar Lists */}
@@ -70,7 +129,6 @@ const LeftSide = () => {
                 <span>My calendars</span>
                 <i className={`fa-solid fa-chevron-down transition-transform calendar-arrow ${myCalendarsOpen ? 'rotate-0' : 'rotate-180'}`}></i>
               </div>
-              {/* Заменить на запрос из базы */}
               {myCalendarsOpen && (
                 <>
                   {myCalendars.map(calendar => (

@@ -6,7 +6,7 @@
 
 /* Calendar Grid */
 .calendar-grid {
-  padding: 1rem 0;
+  padding: 1em 0;
   overflow-x: auto;
 }
 
@@ -27,7 +27,7 @@
 .time-blocks {
   display: flex;
   flex: 1;
-  max-width: 1012px;
+  /* max-width: 1012px; */
   margin-left: 1rem;
 }
 
