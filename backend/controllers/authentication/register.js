@@ -1,4 +1,5 @@
 import User from "../../database/models/User.js";
+import Calendar from "../../database/models/Calendar.js";
 import EmailVerification from "../../database/models/EmailVerification.js";
 
 async function handleRegister(req, res, bcrypt, nodemailer) {
@@ -57,6 +58,17 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
             });
         }
 
+        const defaultCalendar = await Calendar.create({
+            owner: newUser._id,
+            title: `@${newUser.login}'s calendar`,
+            color: "#2196F3",
+            is_visible: true,
+            members: []
+        });
+
+        newUser.calendars.push(defaultCalendar._id);
+        await newUser.save();
+
         // сгенерировать 6-значный код и срок действия
         const code = Math.floor(100000 + Math.random() * 900000).toString();
         const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
@@ -107,7 +119,7 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
             message: "Please confirm your email using the 6-digit code sent to you."
         });
     } catch (error) {
-        // console.error(error);
+        console.error(error);
         res.status(500).send('Unable to register');
     }
 }
