@@ -6,7 +6,7 @@ const CheckBox = ({
   checked,
   onChange,
   disabled = false,
-  checkColor = "purple-600", // 👈 control color here
+  checkColor = "purple-600", // control color here
   className,
   id,
   ...props
