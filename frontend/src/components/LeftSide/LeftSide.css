@@ -111,7 +111,12 @@
 .collapse-btn i.rotate-180 {
   transform: rotate(180deg);
 }
-
+.options{
+  background-color: #a58ad8df;
+}
+li{
+  text-decoration: none;
+}
 @media (min-width: 1024px) {
   .left-side {
     width: 25%;
@@ -135,3 +140,4 @@
     display: none; 
   }
 }
+

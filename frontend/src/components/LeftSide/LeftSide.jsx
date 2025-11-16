@@ -5,6 +5,7 @@ import Popup from '../PopUp/PopUp';
 import NewEvent from '../PopUp/NewEvent';
 import NewTask from "../PopUp/NewTask";
 import NewAppointment from "../PopUp/NewAppointment";
+import NewCalendar from '../PopUp/NewClendar';
 
 import './LeftSide.css';
 
@@ -70,7 +71,7 @@ const LeftSide = () => {
             <i className={`fa-solid fa-chevron-right ${newEventOpen ? 'rotate-0' : 'rotate-180'} white`}></i>
           </button>
           {newEventOpen && (
-            <ul>
+            <ul className='options'>
               <li onClick={(e) => openPopup("event", e)}>Event</li>
               <li onClick={(e) => openPopup("task", e)}>Task</li>
               <li onClick={(e) => openPopup("appointment", e)}>Appointment</li>
@@ -112,10 +113,33 @@ const LeftSide = () => {
           {!collapsed && <MiniCalendar />}
         </div>
 
-        <div className="gap-2"> 
+        <div className="gap-2"
+        onClick={(e) => openPopup("calendar", e)}> 
           <span className="mr-2">Add Calendar</span>
           <i className="fa-solid fa-plus transition-transform white"></i>
         </div>
+
+        {popup === "calendar" && (
+          <Popup position={popupPosition} onClose={() => setPopup(null)}>
+            <NewCalendar
+              onClose={() => setPopup(null)}
+              onCreate={(data) => {
+                console.log("CALENDAR CREATED:", data);
+                // send to backend
+                fetch("http://localhost:3000/api/calendars", {
+                  method: "POST",
+                  credentials: "include",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(data)
+                })
+                  .then(res => res.json())
+                  .then(newCalendar => {
+                    setMyCalendars(prev => [...prev, newCalendar]);
+                  });
+              }}
+            />
+          </Popup>
+        )}
 
         {/* Calendar Lists */}
         {!collapsed && (
