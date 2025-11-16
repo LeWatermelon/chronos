@@ -80,10 +80,10 @@ export default function SmallCalendar({ variant='default', year, month }) {
         {/* Header */}
         <div className="calendar-header">
           <div className="calendar-header-left">
-            <h2 className="calendar-month">
+            <span className="calendar-month">
               {months[currMonth]} 
               {variant === "default" && (<span> {currYear}</span>)}
-            </h2>
+            </span>
           </div>
 
           <div className="calendar-header-right">

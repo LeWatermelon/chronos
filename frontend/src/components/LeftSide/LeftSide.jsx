@@ -6,6 +6,7 @@ import './LeftSide.css';
 const LeftSide = () => {
   const [myCalendarsOpen, setMyCalendarsOpen] = useState(true);
   const [otherCalendarsOpen, setOtherCalendarsOpen] = useState(true);
+  const [createOpen, setCreateOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [isCheked, setCheck] = useState(false);
   

@@ -76,9 +76,6 @@ const handleDayClick = (day) => {
 
   return (
     <>
-      {/* <Helmet>
-        <title>Weekly Calendar View | Calendar Pro</title>
-      </Helmet> */}
         <div className="calendar-main">
           <div className="calendar-layout">
             <CalendarSidebar />
