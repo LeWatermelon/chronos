@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CheckBox from '../ui/CheckBox/CheckBox';
 import MiniCalendar from '../SmallCalendar/SmallCalendar';
 import './LeftSide.css';
@@ -6,9 +6,31 @@ import './LeftSide.css';
 const LeftSide = () => {
   const [myCalendarsOpen, setMyCalendarsOpen] = useState(true);
   const [otherCalendarsOpen, setOtherCalendarsOpen] = useState(true);
-  const [createOpen, setCreateOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
-  const [isCheked, setCheck] = useState(false);
+  // const [isCheked, setCheck] = useState(false);
+
+  const [myCalendars, setMyCalendars] = useState([]);
+  const [otherCalendars, setOtherCalendars] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:3000/api/calendars", {
+      method: "GET",
+      credentials: "include",
+    })
+      .then(async response => {
+        if (!response.ok) {
+          throw new Error("Server error");
+        }
+        return await response.json();
+      })
+      .then(data => {
+        setMyCalendars(data.myCalendars);
+        setOtherCalendars(data.otherCalendars);
+      })
+      .catch(err => {
+        console.error("Failed to load calendars:", err);
+      });
+  }, []);
   
   return (
     <div className={`left-side ${collapsed ? 'collapsed' : ''}`}>
@@ -51,14 +73,16 @@ const LeftSide = () => {
               {/* Заменить на запрос из базы */}
               {myCalendarsOpen && (
                 <>
-                  <div className="calendar-item">
-                    <CheckBox text="main" onChange={() => {}} id="main-calendar"/>
-                    <i className="fa-solid fa-ellipsis-vertical calendar-arrow"></i>
-                  </div>
-                  <div className="calendar-item">
-                    <CheckBox text="KHPI" onChange={() => {}}  id="khpi-calendar"/>
-                    <i className="fa-solid fa-ellipsis-vertical calendar-arrow"></i>
-                  </div>
+                  {myCalendars.map(calendar => (
+                    <div className="calendar-item" key={calendar._id}>
+                      <CheckBox
+                        text={calendar.title}
+                        id={`my-${calendar._id}`}
+                        onChange={() => {}}
+                      />
+                      <i className="fa-solid fa-ellipsis-vertical calendar-arrow"></i>
+                    </div>
+                  ))}
                 </>
               )}
             </div>
@@ -74,15 +98,16 @@ const LeftSide = () => {
               </div>
               {otherCalendarsOpen && (
                 <>
-                  <div className="calendar-item">
-                    {/* Добавить апі + брать с дб  */}
-                    <CheckBox text="Feiertage" onChange={() => {}} id="feiertage-calendar"/>
-                    <i className="fa-solid fa-ellipsis-vertical calendar-arrow"></i>
-                  </div>
-                   <div className="calendar-item">
-                    <CheckBox text="Свята" onChange={() => {}}  id="feiertage-calendar"/>
-                    <i className="fa-solid fa-ellipsis-vertical calendar-arrow"></i>
-                  </div>
+                  {otherCalendars.map(calendar => (
+                    <div className="calendar-item" key={calendar._id}>
+                      <CheckBox
+                        text={calendar.title}
+                        id={`other-${calendar._id}`}
+                        onChange={() => {}}
+                      />
+                      <i className="fa-solid fa-ellipsis-vertical"></i>
+                    </div>
+                  ))}
                 </>
               )}
             </div>
