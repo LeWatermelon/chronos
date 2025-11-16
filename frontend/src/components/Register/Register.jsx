@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import './Register.css'
 
-function Register({}) {
+function Register() {
    const navigate = useNavigate();
    
   const [login, setlogin] = useState('');
@@ -43,7 +43,7 @@ function Register({}) {
     // setIsLoading(true);
     const loaderTimeout = setTimeout(() => setIsLoading(true), 150);
 
-    fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',

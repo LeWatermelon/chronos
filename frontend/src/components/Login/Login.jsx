@@ -25,7 +25,7 @@ function Login({ onLoginSuccess }) {
   }
 
   function onSubmitLogIn() {
-    fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -36,15 +36,15 @@ function Login({ onLoginSuccess }) {
     })
     .then(response => response.json())
     .then(user => {
-        if (user.id) {
+        if (user._id) {
           setError('');
-          onLoginSuccess(user.id);
+          onLoginSuccess(user._id);
           navigate('/home')
-        } else {
+        } else {          
           setError('Incorrect login or email or password');
         }
       })
-      .catch(() => setError('Server error. Please try again later.'));
+      .catch((err) => {setError('Server error. Please try again later.'); console.log(err);});
     }
 
     function onSubmitPasswordReset() {

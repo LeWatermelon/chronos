@@ -18,6 +18,12 @@ const CalendarSchema = new mongoose.Schema({
         type: Boolean, 
         default: true 
     },
+    members: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ]
 }, { timestamps: true });
 
 const Calendar = mongoose.model('Calendar', CalendarSchema);

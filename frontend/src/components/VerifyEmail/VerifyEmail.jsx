@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import './VerifyEmail.css'
 
-function VerifyEmail({ }) {
+function VerifyEmail() {
    const navigate = useNavigate();
    
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -50,7 +50,7 @@ function VerifyEmail({ }) {
         event.preventDefault();
         const code = otp.join("");
 
-        fetch(`${import.meta.env.VITE_API_URL}/auth/register/verify-email`, {
+        fetch(`${import.meta.env.VITE_API_URL}/api/auth/register/verify-email`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
