@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./NewEvent.css";
 
 export default function NewEvent({ onClose, onCreate }) {
@@ -8,23 +8,68 @@ export default function NewEvent({ onClose, onCreate }) {
   const [allDay, setAllDay] = useState(false);
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
-  const [reminder, setReminder] = useState(10); // minutes before
+  const [reminder, setReminder] = useState(15); // minutes before
 
-  const handleSubmit = () => {
-    if (!title || !start || !end) return alert("Title & Time required");
+  const [myCalendars, setMyCalendars] = useState([]);
+  const [otherCalendars, setOtherCalendars] = useState([]);
+  const [calendarId, setCalendarId] = useState("");
 
-    onCreate({
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/api/calendars`, {
+      credentials: "include"
+    })
+      .then(res => res.json())
+      .then(data => {
+        setMyCalendars(data.myCalendars ?? []);
+        setOtherCalendars(data.otherCalendars ?? []);
+      })
+      .catch(err => console.error("Calendar load error:", err));
+  }, []);
+
+  async function handleSubmit() {
+    if (!title) return alert("Title is required");
+    if (!allDay && (!start || !end)) return alert("Start & End time required if not All Day");
+    if (allDay && (start || end)) return alert("You must choose Start & End time or All Day");
+
+    if (!allDay && new Date(start) > new Date(end)) {
+      return alert("Start time cannot be later than End time");
+    }
+
+    const eventData = {
       title,
       description,
-      start_time: start,
-      end_time: end,
+      start_time: allDay ? null : start,
+      end_time: allDay ? null : end,
       location,
-      reminders: [reminder],
+      reminders: allDay ? [] : [reminder],
       is_all_day: allDay
-    });
+    };
 
-    onClose();
-  };
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/calendars/${calendarId}/events`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(eventData)
+        }
+      );
+
+      if (!res.ok) {
+        const error = await res.json();
+        alert("Error: " + error.error);
+        return;
+      }
+
+      const saved = await res.json();
+
+      onCreate(saved);
+      onClose();
+
+    } catch (err) {
+      console.error("Event create error:", err);
+    }
+  }
 
   return (
     <div className="event-popup">
@@ -33,6 +78,19 @@ export default function NewEvent({ onClose, onCreate }) {
         <h3>Create Event</h3>
         <i className="fa-solid fa-xmark close-icon" onClick={onClose}></i>
       </div>
+
+      <label>Choose calendar:</label>
+      <select value={calendarId} onChange={e => setCalendarId(e.target.value)}>
+        <option value="">Select a calendar</option>
+
+        <optgroup label="My calendars">
+          {myCalendars.map(c => <option key={c._id} value={c._id}>{c.title}</option>)}
+        </optgroup>
+
+        <optgroup label="Shared with me">
+          {otherCalendars.map(c => <option key={c._id} value={c._id}>{c.title}</option>)}
+        </optgroup>
+      </select>
 
       <div className="popup-row">
         <input

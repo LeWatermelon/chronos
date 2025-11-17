@@ -1,5 +1,5 @@
 // NewTask.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./NewEvent.css"; // reuse same styles
 
 export default function NewTask({ onClose, onCreate }) {
@@ -8,21 +8,60 @@ export default function NewTask({ onClose, onCreate }) {
   const [hasTime, setHasTime] = useState(false);
   const [time, setTime] = useState("");
   const [description, setDescription] = useState("");
-  const [reminder, setReminder] = useState(10);
+  const [reminder, setReminder] = useState(15);
 
-  const handleSubmit = () => {
+  const [myCalendars, setMyCalendars] = useState([]);
+  const [otherCalendars, setOtherCalendars] = useState([]);
+  const [calendarId, setCalendarId] = useState("");
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/api/calendars`, {
+      credentials: "include"
+    })
+      .then(res => res.json())
+      .then(data => {
+        setMyCalendars(data.myCalendars ?? []);
+        setOtherCalendars(data.otherCalendars ?? []);
+      })
+      .catch(err => console.error("Calendar load error:", err));
+  }, []);
+
+
+  async function handleSubmit() {
+    if (!calendarId) return alert("Choose a calendar first");
     if (!title || !date) return alert("Title & Date required");
 
-    onCreate({
-      title,
-      date,
-      time: hasTime ? time : null,
-      description,
-      reminders: reminder ? [reminder] : [],
-      type: "task",
-    });
+    // формируем due_date: если есть время, добавляем
+    const due_date = hasTime && time ? new Date(`${date}T${time}`) : new Date(date);
 
-    onClose();
+    const taskData = {
+      title,
+      description,
+      due_date,
+      reminders: reminder ? [reminder] : [],
+    };
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/calendars/${calendarId}/tasks`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(taskData),
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        alert("Error: " + error.error);
+        return;
+      }
+
+      const saved = await res.json();
+      onCreate(saved.task); // возвращаем созданную таску
+      onClose();
+
+    } catch (err) {
+      console.error("Task create error:", err);
+    }
   };
 
   return (
@@ -31,6 +70,19 @@ export default function NewTask({ onClose, onCreate }) {
         <h3>Create Task</h3>
         <i className="fa-solid fa-xmark close-icon" onClick={onClose}></i>
       </div>
+
+      <label>Choose calendar:</label>
+      <select value={calendarId} onChange={e => setCalendarId(e.target.value)}>
+        <option value="">Select a calendar</option>
+
+        <optgroup label="My calendars">
+          {myCalendars.map(c => <option key={c._id} value={c._id}>{c.title}</option>)}
+        </optgroup>
+
+        <optgroup label="Shared with me">
+          {otherCalendars.map(c => <option key={c._id} value={c._id}>{c.title}</option>)}
+        </optgroup>
+      </select>
 
       <input
         type="text"

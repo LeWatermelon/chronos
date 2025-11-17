@@ -25,3 +25,8 @@
 .login-container {
   margin-top: 6rem;
 }
+
+.no-scroll {
+  overflow: hidden; /* Блокирует вертикальную и горизонтальную прокрутку */
+  height: 100vh;    /* Защищает от прокрутки через высоту */
+}
