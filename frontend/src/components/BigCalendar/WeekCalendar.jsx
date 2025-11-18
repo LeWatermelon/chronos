@@ -30,17 +30,18 @@ export default function WeekView({ onDateChange, currentDate }) {
   const renderTimeBlocks = (timeSlot) => {
     const days = 7;
     const blocks = [];
-      for (let dayIndex = 0; dayIndex < days; dayIndex++) {
-        const cellKey = `${timeSlot}-${dayIndex}`;
-        const isSelected = selectedCells.has(cellKey);
-        blocks.push(
-          <div
-            key={dayIndex}
-            className={`calendar-cell ${isSelected ? 'selected' : ''}`}
-            onClick={() => handleCellClick(timeSlot, dayIndex)}
-          />
-        );
-      }
+
+    for (let dayIndex = 0; dayIndex < days; dayIndex++) {
+      const cellKey = `${timeSlot}-${dayIndex}`;
+      const isSelected = selectedCells.has(cellKey);
+      blocks.push(
+        <div
+          key={dayIndex}
+          className={`calendar-cell ${isSelected ? 'selected' : ''}`}
+          onClick={() => handleCellClick(timeSlot, dayIndex)}
+        />
+      );
+    }
     return <div className="time-blocks">{blocks}</div>;
   };
 
