@@ -13,7 +13,7 @@ async function handleGetEvents(req, res) {
         const events = await Event.find({ calendar_id: calendarId });
         res.status(200).json(events);
     } catch (error) {
-        console.error(err);
+        console.error(error);
         res.status(500).json({ error: "Server error" });
     }
 }

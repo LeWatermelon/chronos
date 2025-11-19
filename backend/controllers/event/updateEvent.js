@@ -19,7 +19,7 @@ async function handleUpdateEvent(req, res) {
 
         res.status(200).json({ message: "Event updated", event });
     } catch (error) {
-        console.error(err);
+        console.error(error);
         res.status(500).json({ error: "Server error" });
     }
 }
