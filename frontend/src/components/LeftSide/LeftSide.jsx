@@ -3,8 +3,6 @@ import CheckBox from '../ui/CheckBox/CheckBox';
 import MiniCalendar from '../SmallCalendar/SmallCalendar';
 import Popup from '../PopUp/PopUp';
 import NewEvent from '../PopUp/NewEvent';
-import NewTask from "../PopUp/NewTask";
-import NewAppointment from "../PopUp/NewAppointment";
 import NewCalendar from '../PopUp/NewClendar';
 import EditCalendar from '../PopUp/EditCalendar';
 
@@ -26,17 +24,33 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
 
   const [visibleCalendars, setVisibleCalendars] = useState({});
 
-  const [menuCalendarId, setMenuCalendarId] = useState(null);
-  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
-  
+  const [menuCalendarId, setMenuCalendarId] = useState(null);  
   
   const [editingCalendar, setEditingCalendar] = useState(null);
+  
+  const [showMenu, setShowMenu] = useState(false);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      // получаем меню по его уникальному ID
+      if (menuCalendarId) {
+        const menuEl = document.getElementById(`calendar-menu-${menuCalendarId}`);
+        if (menuEl && !menuEl.contains(event.target)) {
+          setMenuCalendarId(null);
+          setShowMenu(false);
+        }
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuCalendarId]);
 
   const openCalendarMenu = (calendarId, e) => {
     e.stopPropagation();
-    const rect = e.target.getBoundingClientRect();
     setMenuCalendarId(calendarId);
-    setMenuPosition({ x: rect.right + 5, y: rect.bottom });
   };
 
   const handleEditCalendar = (calendar, e) => {
@@ -177,37 +191,6 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
           </Popup>
         )}
 
-        {menuCalendarId && (
-          <Popup position={menuPosition} onClose={() => setMenuCalendarId(null)}>
-            <div className="calendar-menu">
-              <div 
-                className="calendar-menu-item" 
-                onClick={(e) => {
-                  const calendar = [...myCalendars, ...otherCalendars].find(c => c._id === menuCalendarId);
-                  handleEditCalendar(calendar, e);
-                  setMenuCalendarId(null);
-                }}
-              >
-                Edit calendar
-              </div>
-
-              <div 
-                className="calendar-menu-item" 
-                // onClick={() => handleInvite(menuCalendarId)}
-              >
-                Invite people
-              </div>
-
-              <div 
-                className="calendar-menu-item delete"
-                // onClick={() => handleDeleteCalendar(menuCalendarId)}
-              >
-                Delete calendar
-              </div>
-            </div>
-          </Popup>
-        )}
-
         {/* Calendar Lists */}
         {!collapsed && (
           <div className="calendar-section">
@@ -237,10 +220,45 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
                         }}
                       />
                       {calendar._id !== myCalendars[0]?._id && (
-                        <i
-                          className="fa-solid fa-ellipsis-vertical calendar-arrow"
-                          onClick={(e) => openCalendarMenu(calendar._id, e)}
-                        ></i>
+                        <div style={{display: 'flex'}}>
+                          <i
+                            className="fa-solid fa-ellipsis-vertical calendar-arrow pointer"
+                            onClick={(e) => {openCalendarMenu(calendar._id, e); setShowMenu(!showMenu)}}
+                          ></i>
+                          {menuCalendarId && showMenu && (
+                            <div
+                              id={`calendar-menu-${menuCalendarId}`}
+                              style={{position: 'absolute', zIndex: 1000, marginLeft: '1rem'}}
+                            >
+                              <div className="calendar-menu">
+                                <div 
+                                    className="calendar-menu-item" 
+                                    onClick={(e) => {
+                                    const calendar = [...myCalendars, ...otherCalendars].find(c => c._id === menuCalendarId);
+                                    handleEditCalendar(calendar, e);
+                                    setMenuCalendarId(null);
+                                  }}
+                                >
+                                  Edit calendar
+                                </div>
+
+                                <div 
+                                  className="calendar-menu-item" 
+                                  // onClick={() => handleInvite(menuCalendarId)}
+                                >
+                                  Invite people
+                                </div>
+
+                                <div 
+                                  className="calendar-menu-item delete"
+                                  // onClick={() => handleDeleteCalendar(menuCalendarId)}
+                                >
+                                  Delete calendar
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       )}
                     </div>
                   ))}
