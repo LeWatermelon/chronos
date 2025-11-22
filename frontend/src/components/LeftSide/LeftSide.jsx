@@ -65,6 +65,32 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
     setPopup("edit-calendar");
   };
 
+  const handleDeleteCalendar = (calendarId) => {
+    if (!window.confirm("Are you sure you want to delete this calendar?")) return;
+
+    fetch(`http://localhost:3000/api/calendars/${calendarId}`, {
+      method: "DELETE",
+      credentials: "include",
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to delete calendar");
+        return res.json();
+      })
+      .then(() => {
+        setMyCalendars(prev => prev.filter(c => c._id !== calendarId));
+        setOtherCalendars(prev => prev.filter(c => c._id !== calendarId));
+
+        setMenuCalendarId(null);
+        setPopup(null);
+        setShowMenu(false);
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Failed to delete calendar.");
+      });
+  };
+
+
   const openPopup = (view, e) => {
     const rect = e.target.getBoundingClientRect();
     setPopup(view);
@@ -232,8 +258,8 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
                             >
                               <div className="calendar-menu">
                                 <div 
-                                    className="calendar-menu-item" 
-                                    onClick={(e) => {
+                                  className="calendar-menu-item" 
+                                  onClick={(e) => {
                                     const calendar = [...myCalendars, ...otherCalendars].find(c => c._id === menuCalendarId);
                                     handleEditCalendar(calendar, e);
                                     setMenuCalendarId(null);
@@ -251,7 +277,7 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
 
                                 <div 
                                   className="calendar-menu-item delete"
-                                  // onClick={() => handleDeleteCalendar(menuCalendarId)}
+                                  onClick={() => handleDeleteCalendar(menuCalendarId)}
                                 >
                                   Delete calendar
                                 </div>
