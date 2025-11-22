@@ -16,9 +16,7 @@ const AppRoutes = () => {
 
   const authRoutes = ['/login', '/register', '/verify-email', '/password-reset', '/'];
   const showParticle = authRoutes.includes(location.pathname);
-  console.log(location.pathname)
-  // console.log();
-  
+
   function onLoginSuccess(userId) {
     setIsSignedIn(true);
     setUserId(userId);

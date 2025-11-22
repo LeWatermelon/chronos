@@ -13,6 +13,7 @@ function Register() {
   const [lastname, setLastname] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [country, setCountry] = useState('');
 
   function onLoginChange(event) {
     setlogin(event.target.value);
@@ -37,6 +38,10 @@ function Register() {
   function onLastnameChange(event) {
     setLastname(event.target.value);
   }
+   
+  function onCountryChange(event) {
+    setCountry(event.target.value);
+  }
 
   function onSubmitRegister() {
     setError('');
@@ -54,6 +59,7 @@ function Register() {
         password_confirmation: passwordConfirmation,
         firstname: firstname,
         lastname: lastname,
+        country: country,
       })
     })
     .then(response => response.json())
@@ -61,7 +67,7 @@ function Register() {
       clearTimeout(loaderTimeout);
 
       if (data.error) {
-        setError(data.error); // ошибка от сервера
+        setError(data.error);
       } else {
         setError('');
         // setMessage(`Password reset email sent to ${email}`);
@@ -151,6 +157,13 @@ function Register() {
                       onChange={onLastnameChange}
                     />
                   </div>
+                  <div className="mt3">
+                    <label className="db fw6 lh-copy f6" htmlFor="last-name">Last name</label>
+                    <select value={timeFormat} onChange={e => onCountryChange(e.target.value)}>
+                      <option value="DE">Germany</option>
+                      <option value="UA">Ukraine</option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </fieldset>
@@ -166,13 +179,6 @@ function Register() {
             </div>
 
             <div className="">
-              {/* <input 
-                className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" 
-                id="register-bnt" 
-                type="submit" 
-                value="Login" 
-                onClick={onSubmitRegister} 
-              /> */}
             <p className="f6 link dim black db pointer underline" onClick={() => navigate('/login')}>Login</p>
             </div>
           </div>
@@ -185,14 +191,11 @@ function Register() {
         </div>
       )}
         
-
       {error && (
         <p style={{ color: 'red', fontWeight: 'bold' }}> 
           &#10006; {error}
         </p>
       )}
-        
-    
     </div>
   );
 }

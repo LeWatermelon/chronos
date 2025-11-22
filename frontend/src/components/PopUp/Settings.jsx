@@ -1,67 +1,53 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
+import { useSettings } from "../context/SettingsContext";
 import "./NewEvent.css";
 
 export default function Settings({ onClose }) {
-  const [contry, setContry] = useState("Ukraine");
-  const [timeFormat, setTimeFormat] = useState("13:00");
-  const [isLogedout, setIsLogedout] = useState(false);
+  const { settings, updateSettings } = useSettings();
 
-  async function handleSubmit() {
-    if (!title) return alert("Title is required");
-    if (!calendarId) return alert("Choose a calendar");
+  const [country, setCountry] = useState(settings.country);
+  const [timeFormat, setTimeFormat] = useState(settings.timeFormat);
+  const [isLoggedOut, setIsLoggedOut] = useState(settings.isLoggedOut);
 
-    let eventData = { title, description, category, reminders: reminder ? [reminder] : [] };
-
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/calendars/${calendarId}/events`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(eventData)
-      });
-
-      if (!res.ok) {
-        const error = await res.json();
-        alert("Error: " + error.error);
-        return;
-      }
-
-      const saved = await res.json();
-      onCreate(saved);
-      onClose();
-
-    } catch (err) {
-      console.error("Event create error:", err);
-    }
+  function handleSubmit() {
+    updateSettings({
+      country,
+      timeFormat,
+      isLoggedOut,
+    });
+    onClose();
   }
 
   return (
     <div className="event-popup">
-      <div className="popup-header">
-        <h3>Settings</h3>
-        <i className="fa-solid fa-xmark close-icon" onClick={onClose}></i>
-      </div>
+      <h3>Settings</h3>
 
-      {/* <label>Choose calendar:</label> */}
-      <select value={calendarId} onChange={e => setCalendarId(e.target.value)}>
-        <option value="">Select a contry </option>
-        <optgroup label="My calendars">
-          {myCalendars.map(c => <option key={c._id} value={c._id}>{c.title}</option>)}
-        </optgroup>
+      <label>Country:</label>
+      <select value={country} onChange={e => setCountry(e.target.value)}>
+        <option>Ukraine</option>
+        <option>USA</option>
+        <option>UK</option>
+        <option>Germany</option>
       </select>
 
-          <lable>Add participants</lable>
-          <div className="popup-row">
-            <input
-              type="text"
-              className="input-title partisipant"
-              placeholder="emails, comma separated"
-              value={participants}
-              onChange={e => setParticipants(e.target.value)}
-            />
-          </div>
+      <label>Time Format:</label>
+      <select value={timeFormat} onChange={e => setTimeFormat(e.target.value)}>
+        <option value="24h">24-hour</option>
+        <option value="12h">12-hour</option>
+      </select>
 
-        <button className="create-btn" onClick={handleSubmit}>Save changes</button>
+      <label>
+        <input
+          type="checkbox"
+          checked={isLoggedOut}
+          onChange={() => setIsLoggedOut(!isLoggedOut)}
+        />
+        Log out on next start
+      </label>
+
+      <button className="create-btn" onClick={handleSubmit}>
+        Save changes
+      </button>
     </div>
   );
 }

@@ -11,9 +11,6 @@ export default function EditCalendar({ calendar, onClose, onSave }) {
   const [color, setColor] = useState(calendar.color);
   const [error, setError] = useState("");
 
-  console.log(calendar);
-  
-
   const handleSave = () => {
     if (!title.trim()) {
       setError("Calendar title cannot be empty");

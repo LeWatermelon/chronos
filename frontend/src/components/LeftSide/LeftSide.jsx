@@ -3,6 +3,7 @@ import CheckBox from '../ui/CheckBox/CheckBox';
 import MiniCalendar from '../SmallCalendar/SmallCalendar';
 import Popup from '../PopUp/PopUp';
 import NewEvent from '../PopUp/NewEvent';
+import Settings from '../PopUp/Settings';
 import NewCalendar from '../PopUp/NewClendar';
 import EditCalendar from '../PopUp/EditCalendar';
 
@@ -131,6 +132,7 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
           <img src="../src/assets/images/logo.svg" alt='logo' className='logo-pick white'></img>
           <h1>Chronos</h1>
         </div>
+
         {/* Header Section */}
         <div className="header">
           <button className="menu-item mr-4 gap-2" onClick={(e) => openPopup("event", e)}>
@@ -187,16 +189,9 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
 
           {popup === "settings" && (
             <Popup position={popupPosition} onClose={() => setPopup(null)}>
-              <NewEvent
-                calendarId={myCalendars[0]?._id}
+              <Settings
                 onClose={() => setPopup(null)}
                 onEventCreated={(data) => {
-                  console.log("EVENT CREATED:", data);
-                  setPopup(null);
-                  // Call generic callback if provided
-                  if (onDataCreated) {
-                    onDataCreated('event', data);
-                  }
                 }}
               />
             </Popup>
