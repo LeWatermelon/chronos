@@ -139,10 +139,29 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
             </Popup>
           )}
 
-          <button className="mr-4 menu-item">
+          {/* settings */}
+          <button className="mr-4 menu-item" onClick={(e) => openPopup("settings", e)}>
             <i className="fa-solid fa-gear white"></i>
           </button>
         </div>
+
+          {popup === "settings" && (
+            <Popup position={popupPosition} onClose={() => setPopup(null)}>
+              <NewEvent
+                calendarId={myCalendars[0]?._id}
+                onClose={() => setPopup(null)}
+                onEventCreated={(data) => {
+                  console.log("EVENT CREATED:", data);
+                  setPopup(null);
+                  // Call generic callback if provided
+                  if (onDataCreated) {
+                    onDataCreated('event', data);
+                  }
+                }}
+              />
+            </Popup>
+          )}
+
 
         {/* Mini Calendar */}
         <div className="smallCalendar">
