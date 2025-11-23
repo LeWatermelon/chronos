@@ -25,6 +25,7 @@ input, select{
 main{
   background-color:#ffffffa8;
   z-index: 100;
+  border-radius: 10px;
 }
 
 .forms-wrapper.resetting {
@@ -37,5 +38,5 @@ main{
 
 .no-scroll {
   overflow: hidden; /* Блокирует вертикальную и горизонтальную прокрутку */
-  height: 100vh;    /* Защищает от прокрутки через высоту */
+  height: 100%;    /* Защищает от прокрутки через высоту */
 }

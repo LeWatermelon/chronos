@@ -7,6 +7,7 @@ import Settings from '../PopUp/Settings';
 import NewCalendar from '../PopUp/NewClendar';
 import EditCalendar from '../PopUp/EditCalendar';
 import InviteUsers from '../PopUp/InviteUsers';
+import ManageMembers from '../PopUp/ManageMembers';
 
 import './LeftSide.css';
 
@@ -185,6 +186,15 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) =>
             </Popup>
           )}
 
+          {popup === "manage-members" && (
+            <Popup position={popupPosition} onClose={() => setPopup(null)}>
+              <ManageMembers
+                calendarId={inviteCalendarId}
+                onClose={() => {setPopup(null); setMenuCalendarId(null); setShowMenu(false);}}
+              />
+            </Popup>
+          )}
+
           {/* settings */}
           <button className="mr-4 menu-item" onClick={(e) => openPopup("settings", e)}>
             <i className="fa-solid fa-gear white"></i>
@@ -298,6 +308,16 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) =>
                                   }}
                                 >
                                   Invite people
+                                </div>
+
+                                <div 
+                                  className="calendar-menu-item"
+                                  onClick={(e) => {
+                                    openPopup('manage-members', e);
+                                    setMenuCalendarId(null);
+                                  }}
+                                >
+                                  Manage members
                                 </div>
 
                                 <div 
