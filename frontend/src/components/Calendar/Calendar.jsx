@@ -259,8 +259,8 @@ export default function Calendar() {
               <Button text="Today" onClick={handleToday} />
               
               <div className="toolbar-left">
-                <i className="fa-solid fa-chevron-left calendar-arrow" onClick={handlePrev}></i>
-                <i className="fa-solid fa-chevron-right calendar-arrow" onClick={handleNext}></i>
+                <i className="fa-solid fa-chevron-left black " onClick={handlePrev}></i>
+                <i className="fa-solid fa-chevron-right black" onClick={handleNext}></i>
               </div>
               
               <span>

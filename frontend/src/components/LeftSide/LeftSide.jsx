@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import CheckBox from '../ui/CheckBox/CheckBox';
 import MiniCalendar from '../SmallCalendar/SmallCalendar';
-import Popup from '../PopUp/PopUp';
-import NewEvent from '../PopUp/NewEvent';
-import Settings from '../PopUp/Settings';
-import NewCalendar from '../PopUp/NewClendar';
-import EditCalendar from '../PopUp/EditCalendar';
-import InviteUsers from '../PopUp/InviteUsers';
-import ManageMembers from '../PopUp/ManageMembers';
+// import Popup from '../PopUp/PopUp';
+// import NewEvent from '../PopUp/NewEvent';
+// import Settings from '../PopUp/Settings';
+// import NewCalendar from '../PopUp/NewClendar';
+// import EditCalendar from '../PopUp/EditCalendar';
+// import InviteUsers from '../PopUp/InviteUsers';
+// import ManageMembers from '../PopUp/ManageMembers';
+
+import PopupController from '../PopUp/PopUpController';
 
 import './LeftSide.css';
 
@@ -47,11 +49,13 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) =>
     };
   }, [menuCalendarId]);
 
-  const openPopup = (view, e) => {
+  const openPopup = (view, e, extra = {}) => {
     const rect = e.target.getBoundingClientRect();
+
     setPopup(view);
     setPopupPosition({ x: rect.right + 10, y: rect.top });
-    setInviteCalendarId(menuCalendarId);
+    setInviteCalendarId(extra.calendarId ?? null);
+    setEditingCalendar(extra.editingCalendar ?? null);
     setShowMenu(false);
   };
 
@@ -121,6 +125,45 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) =>
     }
   };
   
+  // When a new calendar is created
+const handleCalendarCreated = (data) => {
+  fetch("http://localhost:3000/api/calendars", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  })
+    .then(res => res.json())
+    .then(newCalendar => {
+      setMyCalendars(prev => [...prev, newCalendar]);
+      setPopup(null);
+    })
+    .catch(err => {
+      console.error("Failed to create calendar:", err);
+      alert("Failed to create calendar");
+    });
+};
+
+// When a calendar is edited
+const handleCalendarEdited = (updatedData) => {
+  if (!editingCalendar) return;
+
+  fetch(`http://localhost:3000/api/calendars/${editingCalendar._id}`, {
+    method: "PATCH",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updatedData)
+  })
+    .then(res => res.json())
+    .then(updated => {
+      setMyCalendars(prev =>
+        prev.map(c => (c._id === updated._id ? updated : c))
+      );
+      setPopup(null);
+    })
+    .catch(err => console.error("Failed to update calendar:", err));
+  };
+
   return (
     <div className={`left-side ${collapsed ? 'collapsed' : ''}`}>
       <button
@@ -143,57 +186,21 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) =>
             <i className="fa-solid fa-chevron-right white"></i>
           </button>
 
-          {popup === "event" && (
-            <Popup position={popupPosition} onClose={() => setPopup(null)}>
-              <NewEvent
-                calendarId={myCalendars[0]?._id}
-                onClose={() => setPopup(null)}
-                onEventCreated={handleEventCreated}
-              />
-            </Popup>
-          )}
-
-          {popup === "edit-calendar" && (
-            <Popup position={popupPosition} onClose={() => {setMenuCalendarId(null); setPopup(null);}}>
-              <EditCalendar
-                calendar={editingCalendar}
-                onClose={() => setPopup(null)}
-                onSave={(updatedData) => {
-                  fetch(`http://localhost:3000/api/calendars/${editingCalendar._id}`, {
-                    method: "PATCH",
-                    credentials: "include",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(updatedData)
-                  })
-                    .then(res => res.json())
-                    .then(updated => {
-                      setMyCalendars(prev =>
-                        prev.map(c => (c._id === updated._id ? updated : c))
-                      );
-                      setPopup(null);
-                    });
-                }}
-              />
-            </Popup>
-          )}
-
-          {popup === "invite" && (
-            <Popup position={popupPosition} onClose={() => setPopup(null)}>
-              <InviteUsers
-                calendarId={inviteCalendarId}
-                onClose={() => { setPopup(null); setMenuCalendarId(null); setShowMenu(false); }}
-              />
-            </Popup>
-          )}
-
-          {popup === "manage-members" && (
-            <Popup position={popupPosition} onClose={() => setPopup(null)}>
-              <ManageMembers
-                calendarId={inviteCalendarId}
-                onClose={() => {setPopup(null); setMenuCalendarId(null); setShowMenu(false);}}
-              />
-            </Popup>
-          )}
+          <PopupController
+            popup={popup}
+            position={popupPosition}
+            onClose={() => setPopup(null)}
+            context={{
+              calendarId: inviteCalendarId,
+              editingCalendar,
+              primaryCalendarId: myCalendars[0]?._id
+            }}
+            callbacks={{
+              onEventCreated: handleEventCreated,
+              onCalendarCreated: handleCalendarCreated,
+              onCalendarEdited: handleCalendarEdited
+            }}
+          />
 
           {/* settings */}
           <button className="mr-4 menu-item" onClick={(e) => openPopup("settings", e)}>
@@ -201,15 +208,6 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) =>
           </button>
         </div>
 
-        {popup === "settings" && (
-          <Popup position={popupPosition} onClose={() => setPopup(null)}>
-            <Settings
-              onClose={() => setPopup(null)}
-              onEventCreated={(data) => {
-              }}
-            />
-          </Popup>
-        )}
 
         <div className="smallCalendar">
           {!collapsed && <MiniCalendar onDaySelect={onDaySelect}/>}
@@ -219,32 +217,6 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) =>
           <span className="menu-text mr-2">Add Calendar</span>
           <i className="fa-solid fa-plus transition-transform white"></i>
         </div>
-
-        {popup === "calendar" && (
-          <Popup position={popupPosition} onClose={() => setPopup(null)}>
-            <NewCalendar
-              onClose={() => setPopup(null)}
-              onCreate={(data) => {
-                console.log("CALENDAR CREATED:", data);
-                fetch("http://localhost:3000/api/calendars", {
-                  method: "POST",
-                  credentials: "include",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify(data)
-                })
-                  .then(res => res.json())
-                  .then(newCalendar => {
-                    setMyCalendars(prev => [...prev, newCalendar]);
-                    setPopup(null);
-                  })
-                  .catch(err => {
-                    console.error("Failed to create calendar:", err);
-                    alert("Failed to create calendar");
-                  });
-              }}
-            />
-          </Popup>
-        )}
 
         {!collapsed && (
           <div className="calendar-section">
@@ -373,9 +345,11 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) =>
             </div>
           </div>
         )}
+
       </div>
       )}
     </div>
+          
   );
 };
 

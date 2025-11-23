@@ -4,8 +4,9 @@
   /* mb-7 */
   position: relative;
   border-right: 1px solid #5b389e;
-  height: 100%;
+  height: 100vh;
   margin-left: 2em; 
+  scrollbar-width: none;
 }
 
 .left-side-container {
@@ -71,6 +72,10 @@
   flex-direction: column;
   gap: 1.5rem;
   width: 100%;
+  height: 30vh;
+  margin-bottom: 2em; 
+  overflow: scroll;
+  scrollbar-width: none;
 }
 
 .calendar-header {

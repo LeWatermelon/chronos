@@ -82,7 +82,7 @@ function Register() {
   }
 
   return (
-    <div className='center-container mt6'>
+    <div className='for-scroll center-container mt6'>
       <article className="br3 ba b--black-10 mv6 w-100 w-50-m w-35-l mw6 center shadow-5 blur-card">
         <main className="register-main pa4 black-80">
           <div className="measure">
@@ -161,15 +161,15 @@ function Register() {
                   <div className="mt3">
                     <label className="db fw6 lh-copy f6" htmlFor="Country">Country</label>
                     <select value={country} onChange={e => onCountryChange(e.target.value)} className="pa2 input-reset ba b--black bg-transparent w-100">
-                      <option value="DE">Germany</option>
                       <option value="UA">Ukraine</option>
+                      <option value="DE">Germany</option>
                     </select>
                   </div>
                 </div>
               </div>
             </fieldset>
 
-            <div className="">
+            <div className="buttons">
               <input 
                 className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" 
                 id="register-bnt" 
@@ -177,16 +177,6 @@ function Register() {
                 value="Register" 
                 onClick={onSubmitRegister} 
               />
-            </div>
-
-            <div className="">
-              {/* <input 
-                className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" 
-                id="register-bnt" 
-                type="submit" 
-                value="Login" 
-                onClick={onSubmitRegister} 
-              /> */}
             <p className="f6 link dim black db pointer underline" onClick={() => navigate('/login')}>Login</p>
             </div>
           </div>
@@ -198,15 +188,13 @@ function Register() {
           <div className="loader"></div>
         </div>
       )}
-        
-
+      
       {error && (
         <p style={{ color: 'red', fontWeight: 'bold' }}> 
           &#10006; {error}
         </p>
       )}
         
-    
     </div>
   );
 }

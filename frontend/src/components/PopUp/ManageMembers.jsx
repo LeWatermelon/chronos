@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import "./NewEvent.css";
 
 const ManageMembers = ({ calendarId, onClose }) => {
   const [members, setMembers] = useState([]);  
@@ -29,7 +30,9 @@ const ManageMembers = ({ calendarId, onClose }) => {
   };
 
   return (
-    <div className="invite-manager">
+    <div className="event-popup">
+      <div className="invite-manager">
+
       <h2>Manage Members</h2>
 
       {members.length === 0 && <p>No members yet</p>}
@@ -37,13 +40,19 @@ const ManageMembers = ({ calendarId, onClose }) => {
       {members.map(m => (
         <div className="member-row" key={m._id}>
           <span>{m.username} ({m.email})</span>
-          <button onClick={() => removeMember(m._id)} className="remove-btn">
+          <button onClick={() => removeMember(m._id)} className="remove-btn" >
             Remove
           </button>
         </div>
       ))}
 
-      <button className="close-btn" onClick={onClose}>Close</button>
+      <button className="close-btn " onClick={onClose} style={{
+        borderRadius: '5px',
+        border: 'none',
+        backgroundColor: '#b4b0eaff',
+        }}>
+          Close</button>
+      </div>
     </div>
   );
 };

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import "./NewEvent.css";
 
 const InviteUsers = ({ calendarId, onClose }) => {
   const [query, setQuery] = useState('');
@@ -56,38 +57,42 @@ const InviteUsers = ({ calendarId, onClose }) => {
   };
 
   return (
-    <div className="invite-popup">
+    <div className="event-popup">
       <h3>Invite Users</h3>
-      <div>
+      <div className="popup-row">
         <input
           type="text"
           placeholder="Type email or username..."
           value={query}
           onChange={e => setQuery(e.target.value)}
         />
+      </div>
         {suggestions.length > 0 && (
           <ul className="suggestions">
             {suggestions.map(user => (
-              <li key={user._id} onClick={() => addUser(user)}>
+              <li key={user._id} onClick={() => addUser(user)} style={{listStyle: 'none'}}>
                 {user.login} ({user.email})
               </li>
             ))}
           </ul>
         )}
-      </div>
 
       {selectedUsers.length > 0 && (
-        <div className="selected-users">
+        <div className="selected-users gap-1">
           {selectedUsers.map(user => (
-            <span key={user._id} className="selected-user">
-              {user.login}
-              <button onClick={() => removeUser(user._id)}>x</button>
-            </span>
+              <span key={user._id} className="selected-user mr-2">
+                {user.login} 
+              <button onClick={() => removeUser(user._id)}
+                style={{
+                  borderRadius: '5px',
+                  backgroundColor: '#b4b0eaff',
+                }}>x</button>
+              </span>
           ))}
         </div>
       )}
 
-      <button onClick={handleInvite} disabled={selectedUsers.length === 0}>Invite</button>
+      <button className="create-btn" onClick={handleInvite} disabled={selectedUsers.length === 0}>Invite</button>
     </div>
   );
 };

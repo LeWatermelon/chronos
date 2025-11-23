@@ -1,8 +1,25 @@
 import { useState, useEffect } from 'react';
+import Popup from '../PopUp/PopUp';
+import NewEvent from '../PopUp/NewEvent';
 import './WeekCalendar.css';
 
-export default function WeekView({ onDateChange, currentDate, events = [], tasks = [], appointments = [], onTimeSlotClick, onEventClick, onTaskClick, onAppointmentClick, settings = { timeFormat: "24" } }) {
+export default function WeekView({ 
+  onDateChange,
+  currentDate,
+  events = [],
+  tasks = [],
+  appointments = [],
+  onTimeSlotClick,
+  onEventClick, 
+  onTaskClick, 
+  onAppointmentClick,
+  settings = { timeFormat: "24" } 
+}) {
   const [popup, setPopup] = useState(null);
+  const [popupPosition, setPopupPosition] = useState({ x: 200, y: 120 });
+  const [myCalendars, setMyCalendars] = useState([]);
+  const [showMenu, setShowMenu] = useState(false);
+
   useEffect(() => {
     onDateChange({
       year: currentDate.getFullYear(),
@@ -111,7 +128,8 @@ export default function WeekView({ onDateChange, currentDate, events = [], tasks
         <div
           key={dayIndex}
           className={`calendar-cell ${isSelected ? 'selected' : ''}`}
-          onClick={() => handleCellClick(timeSlot, dayIndex)}
+          // onClick={() => handleCellClick(timeSlot, dayIndex)}
+           onClick={(e) => openPopup("event", e)}
         >
           {cellItems.map(event => (
             <div
@@ -142,8 +160,32 @@ export default function WeekView({ onDateChange, currentDate, events = [], tasks
       ...Array.from({ length: 11 }, (_, i) => `${i + 1}PM`)
     ];
 
+  const openPopup = (view, e) => {
+    const rect = e.target.getBoundingClientRect();
+
+    setPopup(view);
+    setPopupPosition({ x: rect.right + 10, y: rect.top });
+    setShowMenu(false);
+  };
+
+   const handleEventCreated = (data) => {
+    console.log("EVENT CREATED:", data);
+    setPopup(null);
+    if (onDateChange) {
+      onDataCreated('event', data);
+    }
+  };
   return (
     <>
+    {popup === "event" && (
+          <Popup position={popupPosition} onClose={() => setPopup(null)}>
+            <NewEvent
+              calendarId={myCalendars[0]?._id}
+              onClose={() => setPopup(null)}
+              onEventCreated={handleEventCreated}
+            />
+          </Popup>
+        )}
       <div className="calendar-container">
         <div className="calendar-grid">
           <div className="time-row">

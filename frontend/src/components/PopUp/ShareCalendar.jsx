@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./NewEvent.css";
 
 export default function ShareCalendar({ calendarId, onClose, onShared }) {

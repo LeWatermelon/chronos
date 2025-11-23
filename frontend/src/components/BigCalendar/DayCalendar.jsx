@@ -1,14 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import Popup from '../PopUp/PopUp';
+import NewEvent from '../PopUp/NewEvent';
 
 export default function DayView({ 
   onDateChange, 
   currentDate, 
   events = [], 
   onEventClick, 
-  onTimeSlotClick 
+  onTimeSlotClick,
+  settings = { timeFormat: "24" }
 }) {
   const [selectedCells, setSelectedCells] = useState(new Set());
-
+  const [popup, setPopup] = useState(null);
+  const [popupPosition, setPopupPosition] = useState({ x: 200, y: 120 });
+  const [myCalendars, setMyCalendars] = useState([]);
+  const [showMenu, setShowMenu] = useState(false);
+  
   useEffect(() => {
     onDateChange({
       year: currentDate.getFullYear(),
@@ -50,13 +57,17 @@ export default function DayView({
 
   // Parse time slot like "9AM" to hour number
   const parseTimeSlot = (slot) => {
-    const isPM = slot.includes('PM');
-    const hour = parseInt(slot.replace(/[AP]M/, ''));
-    
+  if (settings.timeFormat === "24") {
+    return Number(slot); // slot is already "0"…"23"
+  } else {
+    const isPM = slot.includes("PM");
+    const hour = parseInt(slot.replace(/[AP]M/, ""));
+
     if (isPM && hour !== 12) return hour + 12;
     if (!isPM && hour === 12) return 0;
     return hour;
-  };
+  }
+};
 
   const handleCellClick = (timeSlot, dayIndex) => {
     if (onTimeSlotClick) {
@@ -64,6 +75,7 @@ export default function DayView({
       const clickedDate = new Date(currentDate);
       clickedDate.setHours(hour, 0, 0, 0);
       onTimeSlotClick(clickedDate);
+      
     }
 
     const cellKey = `${timeSlot}-${dayIndex}`;
@@ -85,6 +97,14 @@ export default function DayView({
     }
   };
 
+  const handleEventCreated = (data) => {
+    console.log("EVENT CREATED:", data);
+    setPopup(null);
+    if (onDateChange) {
+      onDataCreated('event', data);
+    }
+  };
+
   const renderTimeBlocks = (timeSlot) => {
     const days = 1;
     const blocks = [];
@@ -98,7 +118,8 @@ export default function DayView({
         <div
           key={dayIndex}
           className={`calendar-cell ${isSelected ? 'selected' : ''}`}
-          onClick={() => handleCellClick(timeSlot, dayIndex)}
+          // onClick={() => handleCellClick(timeSlot, dayIndex)}
+           onClick={(e) => openPopup("event", e)}
         >
           {cellItems.map(event => (
             <div
@@ -118,20 +139,44 @@ export default function DayView({
     return <div className="time-blocks">{blocks}</div>;
   };
 
-  const hrs = [
-    ...Array.from({ length: 11 }, (_, i) => `${i + 1}AM`),
-    '12PM',
-    ...Array.from({ length: 11 }, (_, i) => `${i + 1}PM`)
-  ];
-  
+  const hrs = settings.timeFormat === "24"
+  ? Array.from({ length: 24 }, (_, i) => i)  // 0–23
+  : [
+      ...Array.from({ length: 11 }, (_, i) => `${i + 1}AM`),
+      "12PM",
+      ...Array.from({ length: 11 }, (_, i) => `${i + 1}PM`)
+    ];
+    
+  const openPopup = (view, e) => {
+    const rect = e.target.getBoundingClientRect();
+
+    setPopup(view);
+    setPopupPosition({ x: rect.right + 10, y: rect.top });
+    // setInviteCalendarId(extra.calendarId ?? null);
+    // setEditingCalendar(extra.editingCalendar ?? null);
+    setShowMenu(false);
+  };
+
   return (
     <>
+    {popup === "event" && (
+      <Popup position={popupPosition} onClose={() => setPopup(null)}>
+        <NewEvent
+          calendarId={myCalendars[0]?._id}
+          onClose={() => setPopup(null)}
+          onEventCreated={handleEventCreated}
+        />
+      </Popup>
+    )}
+
       <div className="calendar-container w-100">
         <div className="calendar-grid">
           <span className='' style={{display:'flex', justifyContent: 'center'}}>{currentDate.toLocaleDateString('en-US', { weekday: 'long' })}</span>
           {hrs.map((slot) => (
             <div key={slot} className="time-row">
-              <span className="time-label">{slot}</span>
+              <span className="time-label">
+                {settings.timeFormat === "24" ? `${slot}:00` : slot}
+              </span>
               {renderTimeBlocks(slot)}
             </div>
           ))}
