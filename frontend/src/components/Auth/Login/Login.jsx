@@ -100,7 +100,7 @@ function Login({ onLoginSuccess }) {
                   <div className="mt3">
                       <label className="db fw6 lh-copy f6" htmlFor="email-or-login">Email or Login <span style={{color: '#ff0000ff'}}>*</span></label>
                       <input 
-                        className="pa2 input-reset ba b--black bg-transparent hover-white w-100" 
+                        className="pa2 input-reset ba b--black bg-transparent w-100" 
                         type="text" 
                         name="login" 
                         id="login" 
@@ -111,7 +111,7 @@ function Login({ onLoginSuccess }) {
                   <div className="mv3">
                     <label className="db fw6 lh-copy f6" htmlFor="password">Password <span style={{color: '#ff0000ff'}}>*</span></label>
                     <input 
-                      className="b pa2 input-reset ba  bg-transparent hover-white w-100" 
+                      className="b pa2 input-reset ba b--black bg-transparent w-100" 
                       type="password" 
                       name="password" 
                       id="password" 
