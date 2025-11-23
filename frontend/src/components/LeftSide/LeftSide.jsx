@@ -3,12 +3,14 @@ import CheckBox from '../ui/CheckBox/CheckBox';
 import MiniCalendar from '../SmallCalendar/SmallCalendar';
 import Popup from '../PopUp/PopUp';
 import NewEvent from '../PopUp/NewEvent';
+import Settings from '../PopUp/Settings';
 import NewCalendar from '../PopUp/NewClendar';
-import ShareCalendar from '../PopUp/ShareCalendar';
+import EditCalendar from '../PopUp/EditCalendar';
+import InviteUsers from '../PopUp/InviteUsers';
 
 import './LeftSide.css';
 
-const LeftSide = ({ onDataCreated, onDaySelect }) => {
+const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) => {
   const [myCalendarsOpen, setMyCalendarsOpen] = useState(true);
   const [otherCalendarsOpen, setOtherCalendarsOpen] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
@@ -18,14 +20,77 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
 
   const [popup, setPopup] = useState(null);
   const [popupPosition, setPopupPosition] = useState({ x: 200, y: 120 });
-  const [selectedCalendar, setSelectedCalendar] = useState(null);
 
   const [visibleCalendars, setVisibleCalendars] = useState({});
+
+  const [menuCalendarId, setMenuCalendarId] = useState(null);
+  const [editingCalendar, setEditingCalendar] = useState(null);
+  const [showMenu, setShowMenu] = useState(false);
+  const [inviteCalendarId, setInviteCalendarId] = useState(null);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (menuCalendarId) {
+        const menuEl = document.getElementById(`calendar-menu-${menuCalendarId}`);
+        if (menuEl && !menuEl.contains(event.target)) {
+          setMenuCalendarId(null);
+          setShowMenu(false);
+        }
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuCalendarId]);
 
   const openPopup = (view, e) => {
     const rect = e.target.getBoundingClientRect();
     setPopup(view);
     setPopupPosition({ x: rect.right + 10, y: rect.top });
+    setInviteCalendarId(menuCalendarId);
+    setShowMenu(false);
+  };
+
+  const openCalendarMenu = (calendarId, e) => {
+    e.stopPropagation();
+    setMenuCalendarId(calendarId);
+  };
+
+  const handleEditCalendar = (calendar, e) => {
+    const rect = e.target.getBoundingClientRect();
+    setPopupPosition({
+      x: rect.right + 5,
+      y: rect.top
+    });
+    setEditingCalendar(calendar);
+    setPopup("edit-calendar");
+  };
+
+  const handleDeleteCalendar = (calendarId) => {
+    if (!window.confirm("Are you sure you want to delete this calendar?")) return;
+
+    fetch(`http://localhost:3000/api/calendars/${calendarId}`, {
+      method: "DELETE",
+      credentials: "include",
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to delete calendar");
+        return res.json();
+      })
+      .then(() => {
+        setMyCalendars(prev => prev.filter(c => c._id !== calendarId));
+        setOtherCalendars(prev => prev.filter(c => c._id !== calendarId));
+        setMenuCalendarId(null);
+        setPopup(null);
+        setShowMenu(false);
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Failed to delete calendar.");
+      });
   };
 
   useEffect(() => {
@@ -87,10 +152,54 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
             </Popup>
           )}
 
-          <button className="menu-item mr-4">
-            <i className="fa-solid fa-gear"></i>
+          {popup === "edit-calendar" && (
+            <Popup position={popupPosition} onClose={() => {setMenuCalendarId(null); setPopup(null);}}>
+              <EditCalendar
+                calendar={editingCalendar}
+                onClose={() => setPopup(null)}
+                onSave={(updatedData) => {
+                  fetch(`http://localhost:3000/api/calendars/${editingCalendar._id}`, {
+                    method: "PATCH",
+                    credentials: "include",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(updatedData)
+                  })
+                    .then(res => res.json())
+                    .then(updated => {
+                      setMyCalendars(prev =>
+                        prev.map(c => (c._id === updated._id ? updated : c))
+                      );
+                      setPopup(null);
+                    });
+                }}
+              />
+            </Popup>
+          )}
+
+          {popup === "invite" && (
+            <Popup position={popupPosition} onClose={() => setPopup(null)}>
+              <InviteUsers
+                calendarId={inviteCalendarId}
+                onClose={() => { setPopup(null); setMenuCalendarId(null); setShowMenu(false); }}
+              />
+            </Popup>
+          )}
+
+          {/* settings */}
+          <button className="mr-4 menu-item" onClick={(e) => openPopup("settings", e)}>
+            <i className="fa-solid fa-gear white"></i>
           </button>
         </div>
+
+        {popup === "settings" && (
+          <Popup position={popupPosition} onClose={() => setPopup(null)}>
+            <Settings
+              onClose={() => setPopup(null)}
+              onEventCreated={(data) => {
+              }}
+            />
+          </Popup>
+        )}
 
         <div className="smallCalendar">
           {!collapsed && <MiniCalendar onDaySelect={onDaySelect}/>}
@@ -127,20 +236,6 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
           </Popup>
         )}
 
-        {/* NEW: Share Calendar Popup */}
-        {popup === "share" && selectedCalendar && (
-          <Popup position={popupPosition} onClose={() => setPopup(null)}>
-            <ShareCalendar
-              calendarId={selectedCalendar}
-              onClose={() => setPopup(null)}
-              onShared={() => {
-                console.log("Calendar shared");
-                setPopup(null);
-              }}
-            />
-          </Popup>
-        )}
-
         {!collapsed && (
           <div className="calendar-section">
             {/* My Calendars */}
@@ -162,24 +257,60 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
                         color={calendar.color}
                         checked={visibleCalendars[calendar._id]}
                         onChange={() => {
-                          setVisibleCalendars(prev => ({
-                            ...prev,
-                            [calendar._id]: !prev[calendar._id]
-                          }));
+                          const newVisibility = {
+                            ...visibleCalendars,
+                            [calendar._id]: !visibleCalendars[calendar._id]
+                          };
+                          setVisibleCalendars(newVisibility);
+                          if (onCalendarVisibilityChange) {
+                            onCalendarVisibilityChange(newVisibility);
+                          }
                         }}
                       />
-                      {/* UPDATED: Add share button */}
-                      <i 
-                        className="fa-solid fa-share-nodes calendar-arrow" 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedCalendar(calendar._id);
-                          openPopup("share", e);
-                        }}
-                        title="Share calendar"
-                        style={{ marginRight: '8px', cursor: 'pointer' }}
-                      ></i>
-                      <i className="fa-solid fa-ellipsis-vertical calendar-arrow"></i>
+                      {/* Only show menu for non-primary calendars */}
+                      {calendar._id !== myCalendars[0]?._id && (
+                        <div style={{display: 'flex', position: 'relative'}}>
+                          <i
+                            className="fa-solid fa-ellipsis-vertical calendar-arrow pointer"
+                            onClick={(e) => {openCalendarMenu(calendar._id, e); setShowMenu(!showMenu)}}
+                          ></i>
+                          {menuCalendarId === calendar._id && showMenu && (
+                            <div
+                              id={`calendar-menu-${menuCalendarId}`}
+                              style={{position: 'absolute', zIndex: 1000, marginLeft: '1rem'}}
+                            >
+                              <div className="calendar-menu">
+                                <div 
+                                  className="calendar-menu-item" 
+                                  onClick={(e) => {
+                                    handleEditCalendar(calendar, e);
+                                    setMenuCalendarId(null);
+                                  }}
+                                >
+                                  Edit calendar
+                                </div>
+
+                                <div 
+                                  className="calendar-menu-item" 
+                                  onClick={(e) => {
+                                    openPopup('invite', e);
+                                    setMenuCalendarId(null); 
+                                  }}
+                                >
+                                  Invite people
+                                </div>
+
+                                <div 
+                                  className="calendar-menu-item delete"
+                                  onClick={() => handleDeleteCalendar(menuCalendarId)}
+                                >
+                                  Delete calendar
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </>
@@ -205,13 +336,16 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
                         color={calendar.color}
                         checked={visibleCalendars[calendar._id]}
                         onChange={() => {
-                          setVisibleCalendars(prev => ({
-                            ...prev,
-                            [calendar._id]: !prev[calendar._id]
-                          }));
+                          const newVisibility = {
+                            ...visibleCalendars,
+                            [calendar._id]: !visibleCalendars[calendar._id]
+                          };
+                          setVisibleCalendars(newVisibility);
+                          if (onCalendarVisibilityChange) {
+                            onCalendarVisibilityChange(newVisibility);
+                          }
                         }}
                       />
-                      <i className="fa-solid fa-ellipsis-vertical calendar-arrow"></i>
                     </div>
                   ))}
                 </>

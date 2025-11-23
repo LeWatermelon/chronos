@@ -1,5 +1,4 @@
-// Popup.jsx
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import "./Popup.css";
 
 export default function Popup({ children, position, onClose }) {

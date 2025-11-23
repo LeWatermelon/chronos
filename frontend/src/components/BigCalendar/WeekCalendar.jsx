@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './WeekCalendar.css';
 
-export default function WeekView({ onDateChange, currentDate, events = [], onTimeSlotClick, onEventClick }) {
+export default function WeekView({ onDateChange, currentDate, events = [], tasks = [], appointments = [], onTimeSlotClick, onEventClick, onTaskClick, onAppointmentClick }) {
+  const [popup, setPopup] = useState(null);
   useEffect(() => {
     onDateChange({
       year: currentDate.getFullYear(),
@@ -16,7 +17,7 @@ export default function WeekView({ onDateChange, currentDate, events = [], onTim
   const getWeekStart = (date) => {
     const d = new Date(date);
     const day = d.getDay();
-    const diff = d.getDate() - day;
+    const diff = d.getDate() - ((day + 6) % 7);
     return new Date(d.setDate(diff));
   };
 
@@ -140,8 +141,9 @@ export default function WeekView({ onDateChange, currentDate, events = [], onTim
       <div className="calendar-container">
         <div className="calendar-grid">
           <ul className="weeks">
+            <li className='time-label mr-2' ></li>
             {weekDays.map((day, index) => (
-              <li key={index}>
+              <li className='calendar-cell' key={index}>
                 <div className="week-day-header">
                   <div className="day-name">
                     {day.toLocaleDateString('en-US', { weekday: 'short' })}

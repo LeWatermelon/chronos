@@ -78,10 +78,17 @@
   width: 90%;
 }
 
-.calendar-grid .weeks span {
+/* .calendar-grid .weeks span {
   font-size: 0.9rem;
   font-weight: 400;
   color: var(--text-white);
+} */
+
+.week-day-header{
+  background-color: #edf1f8;
+  /* width: calc(65vw/8); */
+  margin: 0;
+  padding: 0 1em;
 }
 
 .event-block.reminder { background-color: #2196F3; }

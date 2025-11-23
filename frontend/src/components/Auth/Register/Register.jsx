@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './Register.css'
 
 function Register() {
-   const navigate = useNavigate();
+  const navigate = useNavigate();
    
   const [login, setlogin] = useState('');
   const [email, setEmail] = useState('');
@@ -13,6 +13,7 @@ function Register() {
   const [lastname, setLastname] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [country, setCountry] = useState('');
 
   function onLoginChange(event) {
     setlogin(event.target.value);
@@ -38,6 +39,10 @@ function Register() {
     setLastname(event.target.value);
   }
 
+  function onCountryChange(event) {
+    setCountry(event.target.value);
+  }
+
   function onSubmitRegister() {
     setError('');
     // setIsLoading(true);
@@ -54,6 +59,7 @@ function Register() {
         password_confirmation: passwordConfirmation,
         firstname: firstname,
         lastname: lastname,
+        country: country,
       })
     })
     .then(response => response.json())
@@ -150,6 +156,13 @@ function Register() {
                       id="last-name" 
                       onChange={onLastnameChange}
                     />
+                  </div>
+                  <div className="mt3">
+                    <label className="db fw6 lh-copy f6" htmlFor="Country">Country</label>
+                    <select value={country} onChange={e => onCountryChange(e.target.value)}>
+                      <option value="DE">Germany</option>
+                      <option value="UA">Ukraine</option>
+                    </select>
                   </div>
                 </div>
               </div>

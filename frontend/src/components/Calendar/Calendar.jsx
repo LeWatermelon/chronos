@@ -21,12 +21,12 @@ export default function Calendar() {
   });
 
   const [calendarId, setCalendarId] = useState(null);
-  const [events, setEvents] = useState([]);
+  const [allEvents, setAllEvents] = useState([]);
+  const [visibleCalendars, setVisibleCalendars] = useState({});
   const [showNewEvent, setShowNewEvent] = useState(false);
-  const [loading, setLoading] = useState(true);  // Single loading state
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch user's calendars
   useEffect(() => {
     const fetchCalendars = async () => {
       try {
@@ -55,10 +55,10 @@ export default function Calendar() {
     fetchCalendars();
   }, []);
 
-  // Create default calendar if none exists
+  // создание дефолтного календаря -- проверить, вызывает ли создание двух на рыло
   const createDefaultCalendar = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/calendars', {  // Fixed endpoint
+      const response = await fetch('http://localhost:3000/api/calendars', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -83,26 +83,39 @@ export default function Calendar() {
     }
   };
 
-  // Fetch events for the selected calendar
+  // фетч ВСЁ
   const fetchEvents = async () => {
-    if (!calendarId) return;
-
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:3000/api/events/${calendarId}`, {
+      const response = await fetch('http://localhost:3000/api/calendars', {
         credentials: 'include',
         headers: { 'Accept': 'application/json' }
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch events');
+        throw new Error('Failed to fetch calendars');
       }
 
       const data = await response.json();
-      setEvents(data);
+      const allCalendars = [...(data.myCalendars || []), ...(data.otherCalendars || [])];
+      
+      const eventsPromises = allCalendars.map(calendar =>
+        fetch(`http://localhost:3000/api/events/${calendar._id}`, {
+          credentials: 'include',
+          headers: { 'Accept': 'application/json' }
+        })
+          .then(res => res.ok ? res.json() : [])
+          .then(events => events.map(event => ({ ...event, calendarId: calendar._id })))
+          .catch(() => [])
+      );
+
+      const eventsArrays = await Promise.all(eventsPromises);
+      const allEvents = eventsArrays.flat();
+      
+      setAllEvents(allEvents);
     } catch (error) {
       console.error('Error fetching events:', error);
-      setEvents([]);
+      setAllEvents([]);
     } finally {
       setLoading(false);
     }
@@ -110,19 +123,27 @@ export default function Calendar() {
 
   useEffect(() => {
     fetchEvents();
-  }, [calendarId]);
+  }, []);
 
-  // Handle event creation
-  const handleEventCreated = (newEvent) => {
-    setEvents([...events, newEvent]);
+  // фильтр видимости
+  const visibleEvents = allEvents.filter(event => 
+    visibleCalendars[event.calendarId] !== false
+  );
+
+  // смена видимости по клику
+  const handleCalendarVisibilityChange = (newVisibleCalendars) => {
+    setVisibleCalendars(newVisibleCalendars);
   };
 
-  // Handle data creation from sidebar - just refetch
+  const handleEventCreated = (newEvent) => {
+    setAllEvents([...allEvents, newEvent]);
+  };
+
+  // рефетч данных
   const handleDataCreated = (type, data) => {
     fetchEvents();
   };
 
-  // Small calendar selection 
   const handleSmallCalendarDaySelect = (date) => {
     setCurrentDate(date);
     setSelectedView("Day");
@@ -138,7 +159,7 @@ export default function Calendar() {
     const commonProps = { 
       onDateChange: setCurrentInfo, 
       currentDate,
-      events,
+      events: visibleEvents,
       onEventClick: (event) => console.log('Event clicked:', event),
       onTimeSlotClick: (date) => {
         setCurrentDate(date);
@@ -201,7 +222,11 @@ export default function Calendar() {
     return (
       <div className="calendar-main">
         <div className="calendar-layout">
-          <CalendarSidebar onDataCreated={handleDataCreated} onDaySelect={handleSmallCalendarDaySelect} />
+          <CalendarSidebar 
+            onDataCreated={handleDataCreated} 
+            onDaySelect={handleSmallCalendarDaySelect}
+            onCalendarVisibilityChange={handleCalendarVisibilityChange}
+          />
           <div className="calendar-content">
             <div style={{ padding: '20px', color: 'red' }}>
               <h3>Error Loading Calendar</h3>
@@ -223,7 +248,11 @@ export default function Calendar() {
     <>
       <div className="calendar-main">
         <div className="calendar-layout">
-          <CalendarSidebar onDataCreated={handleDataCreated} onDaySelect={handleSmallCalendarDaySelect} />
+          <CalendarSidebar 
+            onDataCreated={handleDataCreated} 
+            onDaySelect={handleSmallCalendarDaySelect}
+            onCalendarVisibilityChange={handleCalendarVisibilityChange}
+          />
 
           <div className="calendar-content">
             <div className="calendar-toolbar">
