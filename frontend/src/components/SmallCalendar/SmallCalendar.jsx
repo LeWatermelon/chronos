@@ -12,7 +12,8 @@ export default function SmallCalendar({ variant='default', year, month, onDaySel
 
   // Generate all days dynamically for the current month
   function getDays() {
-    const firstDayOfMonth = new Date(currYear, currMonth, 1).getDay();
+    const jsFirstDay = new Date(currYear, currMonth, 1).getDay();
+    const firstDayOfMonth = (jsFirstDay + 6) % 7;
     const lastDateOfMonth = new Date(currYear, currMonth + 1, 0).getDate();
     const lastDayOfMonth = new Date(currYear, currMonth, lastDateOfMonth).getDay();
     const lastDateOfPrevMonth = new Date(currYear, currMonth, 0).getDate();
@@ -95,13 +96,13 @@ export default function SmallCalendar({ variant='default', year, month, onDaySel
 
         {/* Week Labels */}
         <ul className="weeks">
-          <li>Sun</li>
           <li>Mon</li>
           <li>Tue</li>
           <li>Wed</li>
           <li>Thu</li>
           <li>Fri</li>
           <li>Sat</li>
+          <li>Sun</li>
         </ul>
 
         {/* Days */}

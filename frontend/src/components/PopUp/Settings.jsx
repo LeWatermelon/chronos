@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSettings } from "../context/SettingsContext";
+import { useSettings } from "../SettingsContext/SettingsContext";
 import "./NewEvent.css";
 
 export default function Settings({ onClose }) {

@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './Register.css'
 
 function Register() {
-   const navigate = useNavigate();
-   
+  const navigate = useNavigate();
   const [login, setlogin] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -158,8 +157,8 @@ function Register() {
                     />
                   </div>
                   <div className="mt3">
-                    <label className="db fw6 lh-copy f6" htmlFor="last-name">Last name</label>
-                    <select value={timeFormat} onChange={e => onCountryChange(e.target.value)}>
+                    <label className="db fw6 lh-copy f6" htmlFor="Country">Country</label>
+                    <select value={country} onChange={e => onCountryChange(e.target.value)}>
                       <option value="DE">Germany</option>
                       <option value="UA">Ukraine</option>
                     </select>
