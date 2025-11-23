@@ -129,7 +129,7 @@ export default function DayView({
             <div
               key={event._id}
               className={`event-block ${event.category}`}
-              style={{ backgroundColor: getCalendarColor(event.calendarId) }} // Add this
+              style={{ backgroundColor: getCalendarColor(event.calendarId) }}
               onClick={(e) => handleItemClick(event, e)}
               title={`${event.title}\n${event.description || ''}`}
             >
