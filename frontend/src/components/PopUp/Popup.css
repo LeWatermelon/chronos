@@ -1,0 +1,11 @@
+.popup-container {
+  position: absolute;
+  top: 10vh;
+  left: calc(100% + 10px);
+  background: rgba(148, 174, 200, 0.855);
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  min-width: 320px;
+}

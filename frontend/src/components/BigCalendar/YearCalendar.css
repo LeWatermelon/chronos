@@ -1,0 +1,35 @@
+.month-calendar {
+  margin-bottom: 4rem;
+}
+.month-calendar li {
+  width: calc(100%/4);
+  display: flex; 
+  flex-direction: column;
+  align-items: center;
+}
+
+.month-calendar ul {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+  margin-top: 1em;
+  list-style: none;
+}
+
+@media (max-width: 960px) {
+  .month-calendar li {
+      width: calc(100% / 3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+}
+
+@media (max-width: 650px) {
+  .month-calendar li {
+    width: calc(100% / 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}

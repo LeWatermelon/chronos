@@ -1,0 +1,42 @@
+
+.forms-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.forms-wrapper {
+  display: flex;
+  width: 200%;
+  transition: transform 0.6s ease-in-out;
+  align-items: flex-start
+}
+input, select{
+  outline: none;
+}
+
+.login-form,
+.reset-form {
+  width: 50%;
+  flex-shrink: 0;
+}
+
+main{
+  background-color:#ffffffa8;
+  z-index: 100;
+  border-radius: 10px;
+}
+
+.forms-wrapper.resetting {
+  transform: translateX(-50%);
+}
+
+.login-container {
+  margin-top: 6rem;
+}
+
+.no-scroll {
+  overflow: hidden; /* Блокирует вертикальную и горизонтальную прокрутку */
+  height: 100%;    /* Защищает от прокрутки через высоту */
+}

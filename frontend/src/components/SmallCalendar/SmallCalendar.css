@@ -1,0 +1,190 @@
+
+
+.calendar-box {
+  position: relative;
+  width: 90%;
+  padding: 1em;
+  border-radius: 1em;
+
+  /* Glass background */
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+  /* Ensure child content is above the pseudo-element */
+  isolation: isolate;
+}
+
+.calendar-box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* covers full box */
+  padding: 2px;
+  /* border thickness */
+  border-radius: inherit;
+  /* perfect rounded border */
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.65),
+      rgba(255, 255, 255, 0.05));
+
+  /* Mask the center so only the border shows */
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  /* border doesn't block clicks */
+}
+
+.calendar-box.inCalendar{
+    position: relative;
+    min-height: 180px;
+    max-height: max-content;
+    /* mb-6 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    /* background: linear-gradient(to bottom, rgba(255, 255, 255, 0.834), transparent); */
+    /* border: 1px solid rgba(255, 255, 255, 0.2); */
+    border-radius: 1em;
+    margin: 5px;
+}
+
+.calendar-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  padding: 0.5em 0.5em;
+  /* py-2 px-5 */
+}
+
+/* head */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0.1rem;
+}
+
+.calendar-header-left {
+  display: flex;
+  gap: 1.75rem;
+  flex: 1;
+  align-items: center;
+}
+.calendar-box.inCalendar .calendar-header-left{
+  height: 1.5em;
+}
+
+.calendar-header-right {
+  display: flex;
+  align-items: center;
+  /* justify-content: end; */
+  gap: 1.25rem;
+  margin-bottom: 0.25rem;
+}
+
+/* .calendar-box.inCalendar .calendar-header-right{
+  display: none;
+} */
+
+.calendar-month, span{
+  font-size: (0.8em, 1.125em, 1.125rem);
+  font-weight: 700;
+  line-height: 1.8rem;
+  color: var(--text-white);
+}
+
+.calendar-box.inCalendar .calendar-month {
+  font-size: 1em;
+  font-weight: 600;
+  line-height: 1.5rem;
+  color: var(--text-white);
+  margin-bottom: 2em;
+}
+
+.calendar-arrow {
+  width: 4px;
+  height: 10px;
+  color: var(--text-white);
+}
+.calendar-box.inCalendar .calendar-arrow {
+  display: none;
+}
+
+/* inner inf */
+.calendar-inner ul {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.calendar-inner li {
+  color: #333;
+  width: calc(100% / 7);
+  font-size: 0.8em;
+}
+
+.calendar-box.inCalendar .calendar-inner li{
+  font-size: 0.8em;
+  width: calc(100% / 7);
+}
+
+.weeks {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.weeks span {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--text-white);
+}
+
+.days li {
+  z-index: 1;
+  cursor: pointer;
+  position: relative;
+  margin-top: 20px;
+}
+
+.calendar-box.inCalendar .days li{
+  margin-top: 10px;
+}
+.days li.inactive {
+  color: #126085;
+}
+
+.days li.active {
+  color: #fff;
+}
+
+.days li::before {
+  position: absolute;
+  content: "";
+  left: 50%;
+  top: 50%;
+  height: 32px;
+  width: 32px;
+  z-index: -1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.days li.active::before {
+  background: #9B59B6;
+}
+
+.days li:not(.active):hover::before {
+  background: #f2f2f2;
+}
+.days {
+  margin-bottom: 18px;
+}

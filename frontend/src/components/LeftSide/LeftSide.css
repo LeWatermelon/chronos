@@ -1,0 +1,206 @@
+.left-side {
+  width: 20%;
+  margin-bottom: 1.75rem;
+  /* mb-7 */
+  position: relative;
+  border-right: 1px solid #5b389e;
+  height: 100vh;
+  margin-left: 2em; 
+  scrollbar-width: none;
+}
+
+.left-side-container {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 0.5rem;
+  /* gap-2 */
+  width: 100%;
+  padding: 1rem;
+}
+
+.header {
+  display: flex;
+  /* flex-direction: column; */
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  margin-top: 1em;
+}
+
+.logo {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5rem;
+  color: white;
+  margin-left: 0.75rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo-pick{
+  width: 3em;
+  height: 3em;
+  color: white;
+  filter: brightness(0) invert(1);
+}
+.menu-item {
+  /* display: none; */
+  width: fit-content;
+  align-items: center;
+  justify-content: start;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.3), rgba(229, 231, 235, 0.3));
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  border: 1px rgb(215, 214, 227) solid;
+}
+
+.menu-text {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5rem;
+  color: white;
+  margin-left: 0.75rem;
+}
+
+.calendar-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  height: 30vh;
+  margin-bottom: 2em; 
+  /* overflow: scroll; <-- this causes the calendar settings menu to be gobbled up*/
+  scrollbar-width: none;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 85%;
+  cursor: pointer;
+  margin: 0;
+}
+
+.calendar-header span {
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 2rem;
+  color: white;
+  
+}
+
+/* .rotate-180 {
+  transform: rotate(180deg);
+}
+
+.rotate-0 {
+  transform: rotate(0deg);
+} */
+
+.calendar-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  width: 90%;
+  padding-left: 0.5rem;
+  padding-top: 0.25rem;
+  inset: -1em;
+}
+
+.collapse-btn {
+  position: absolute;
+  right: -1em;
+  /* Slightly outside sidebar */
+  top: 50%;
+  /* transform: translateY(-50%); */
+  background-color: #5b389e;
+  /* dark background */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.3s ease;
+}
+
+.collapse-btn i.rotate-180 {
+  transform: rotate(180deg);
+}
+.options{
+  background-color: #d5cae985;
+  border-radius: 5px;
+  margin: 0.5em;
+  padding:0;
+}
+.options li{
+  list-style: none;
+}
+
+@media (min-width: 1024px) {
+  .left-side {
+    width: 25%;
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
+  .left-side-container {
+    padding: 0;
+  }
+  .header {
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  .left-side.collapsed {
+    width: 50px;
+  }
+}
+
+@media (max-width: 960px){
+  .smallCalendar{
+    display: none; 
+  }
+}
+
+
+.calendar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  min-width: 200px;
+  background-color: rgb(231, 243, 250);
+  border-radius: 10px;
+}
+
+.calendar-menu .calendar-menu-item {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  cursor: pointer;
+  color: rgb(8, 1, 27);
+}
+
+.calendar-menu .calender-menu-item:hover {
+  background-color: #473bca;
+}
+
+.calendar-menu .delete {
+  color: #ff6b6b;
+}
+
+.calendar-menu .disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.checkbox-label{
+  color: rgb(228, 225, 225);
+}
