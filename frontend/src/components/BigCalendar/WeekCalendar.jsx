@@ -129,6 +129,7 @@ export default function WeekView({
         <div
           key={dayIndex}
           className={`calendar-cell ${isSelected ? 'selected' : ''}`}
+          // onClick={() => handleCellClick(timeSlot, dayIndex)}
           onClick={(e) => openPopup("event", e)}
         >
           {cellItems.map(event => (
@@ -153,7 +154,7 @@ export default function WeekView({
     return <div className="time-blocks">{blocks}</div>;
   };
 
-   const hrs = settings.timeFormat === "24"
+  const hrs = settings.timeFormat === "24"
   ? Array.from({ length: 24 }, (_, i) => i)  // 0–23
   : [
       ...Array.from({ length: 11 }, (_, i) => `${i + 1}AM`),
@@ -176,7 +177,6 @@ export default function WeekView({
       onDataCreated('event', data);
     }
   };
-
   return (
     <>
     {popup === "event" && (

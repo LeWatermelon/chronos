@@ -61,7 +61,7 @@ const InviteUsers = ({ calendarId, onClose }) => {
   return (
     <div className="event-popup">
       <h3>Invite Users</h3>
-        <div className="popup-row">
+      <div className="popup-row">
         <input
           type="text"
           placeholder="Type email or username..."

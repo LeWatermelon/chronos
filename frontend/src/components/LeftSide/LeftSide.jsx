@@ -52,6 +52,7 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) =>
 
   const openPopup = (view, e, extra = {}) => {
     const rect = e.target.getBoundingClientRect();
+
     setPopup(view);
     setPopupPosition({ x: rect.right + 10, y: rect.top });
     setInviteCalendarId(extra.calendarId ?? null);
@@ -132,7 +133,7 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) =>
       credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
-      })
+    })
       .then(res => res.json())
       .then(newCalendar => {
         setMyCalendars(prev => [...prev, newCalendar]);
@@ -153,7 +154,7 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) =>
       credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updatedData)
-      })
+    })
       .then(res => res.json())
       .then(updated => {
         setMyCalendars(prev =>
