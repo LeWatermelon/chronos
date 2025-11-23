@@ -7,7 +7,6 @@ async function handleInviteToCalendar(req, res, nodemailer) {
         const { email } = req.body;
 
         const currentUserId = req.session.user.id;
-        console.log(currentUserId);
         
 
         const user = await User.findOne({ email });

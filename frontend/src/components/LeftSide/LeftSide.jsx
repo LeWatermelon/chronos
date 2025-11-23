@@ -126,42 +126,42 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) =>
   };
   
   // When a new calendar is created
-const handleCalendarCreated = (data) => {
-  fetch("http://localhost:3000/api/calendars", {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  })
-    .then(res => res.json())
-    .then(newCalendar => {
-      setMyCalendars(prev => [...prev, newCalendar]);
-      setPopup(null);
+  const handleCalendarCreated = (data) => {
+    fetch("http://localhost:3000/api/calendars", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
     })
-    .catch(err => {
-      console.error("Failed to create calendar:", err);
-      alert("Failed to create calendar");
-    });
-};
+      .then(res => res.json())
+      .then(newCalendar => {
+        setMyCalendars(prev => [...prev, newCalendar]);
+        setPopup(null);
+      })
+      .catch(err => {
+        console.error("Failed to create calendar:", err);
+        alert("Failed to create calendar");
+      });
+  };
 
 // When a calendar is edited
-const handleCalendarEdited = (updatedData) => {
-  if (!editingCalendar) return;
+  const handleCalendarEdited = (updatedData) => {
+    if (!editingCalendar) return;
 
-  fetch(`http://localhost:3000/api/calendars/${editingCalendar._id}`, {
-    method: "PATCH",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(updatedData)
-  })
-    .then(res => res.json())
-    .then(updated => {
-      setMyCalendars(prev =>
-        prev.map(c => (c._id === updated._id ? updated : c))
-      );
-      setPopup(null);
+    fetch(`http://localhost:3000/api/calendars/${editingCalendar._id}`, {
+      method: "PATCH",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedData)
     })
-    .catch(err => console.error("Failed to update calendar:", err));
+      .then(res => res.json())
+      .then(updated => {
+        setMyCalendars(prev =>
+          prev.map(c => (c._id === updated._id ? updated : c))
+        );
+        setPopup(null);
+      })
+      .catch(err => console.error("Failed to update calendar:", err));
   };
 
   return (
@@ -185,7 +185,7 @@ const handleCalendarEdited = (updatedData) => {
             <span className="menu-text gap-1">Create event </span>
             <i className="fa-solid fa-chevron-right white"></i>
           </button>
-
+          
           <PopupController
             popup={popup}
             position={popupPosition}
@@ -275,7 +275,7 @@ const handleCalendarEdited = (updatedData) => {
                                 <div 
                                   className="calendar-menu-item" 
                                   onClick={(e) => {
-                                    openPopup('invite', e);
+                                    openPopup('invite', e, { calendarId: calendar._id });
                                     setMenuCalendarId(null); 
                                   }}
                                 >
@@ -285,7 +285,7 @@ const handleCalendarEdited = (updatedData) => {
                                 <div 
                                   className="calendar-menu-item"
                                   onClick={(e) => {
-                                    openPopup('manage-members', e);
+                                    openPopup('manage-members', e, { calendarId: calendar._id });
                                     setMenuCalendarId(null);
                                   }}
                                 >
