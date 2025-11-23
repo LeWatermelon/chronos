@@ -169,21 +169,22 @@
 .calendar-menu {
   display: flex;
   flex-direction: column;
-  background: #1d1d1d;
-  border: 1px solid #444;
+  gap: 8px;
   padding: 10px;
-  border-radius: 6px;
-  min-width: 150px;
+  min-width: 200px;
+  background-color: rgb(231, 243, 250);
+  border-radius: 10px;
 }
 
-.calendar-menu .menu-item {
-  padding: 6px 8px;
+.calendar-menu .calendar-menu-item {
+  padding-top: 2px;
+  padding-bottom: 2px;
   cursor: pointer;
-  color: white;
+  color: rgb(8, 1, 27);
 }
 
-.calendar-menu .menu-item:hover {
-  background: #333;
+.calendar-menu .calender-menu-item:hover {
+  background-color: #473bca;
 }
 
 .calendar-menu .delete {
@@ -193,4 +194,7 @@
 .calendar-menu .disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+.checkbox-label{
+  color: rgb(228, 225, 225);
 }
