@@ -115,7 +115,7 @@ const InviteUsers = ({ calendarId, onClose }) => {
   return (
     <div className="event-popup">
       <div className="popup-header">
-        <h3>Invite Users to Calendar</h3>
+        <h3>Invite Users</h3>
         <i className="fa-solid fa-xmark close-icon" onClick={onClose}></i>
       </div>
       
