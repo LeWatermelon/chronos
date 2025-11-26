@@ -157,3 +157,13 @@
   color: var(--text-light);
   text-align: center;
 }
+/* event slot */
+
+.day-slots{
+  flex-direction: column;
+}
+
+.event-slot{
+  font-size: 0.5em;
+  font-weight: 400;
+}

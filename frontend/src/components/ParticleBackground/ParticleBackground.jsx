@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, memo } from "react";
+import { useEffect, useMemo, useState, memo } from "react";
 import { Particles, initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
 

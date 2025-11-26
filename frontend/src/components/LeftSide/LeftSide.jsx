@@ -1,14 +1,7 @@
 import { useState, useEffect } from 'react';
 import CheckBox from '../ui/CheckBox/CheckBox';
 import MiniCalendar from '../SmallCalendar/SmallCalendar';
-// import Popup from '../PopUp/PopUp';
-// import NewEvent from '../PopUp/NewEvent';
-// import Settings from '../PopUp/Settings';
-// import NewCalendar from '../PopUp/NewClendar';
-// import EditCalendar from '../PopUp/EditCalendar';
-// import InviteUsers from '../PopUp/InviteUsers';
-// import ManageMembers from '../PopUp/ManageMembers';
-
+import PopupEditMenu from './PopupEditMenu'
 import PopupController from '../PopUp/PopUpController';
 
 import './LeftSide.css';
@@ -259,7 +252,7 @@ const handleCalendarEdited = (updatedData) => {
                           {menuCalendarId === calendar._id && showMenu && (
                             <div
                               id={`calendar-menu-${menuCalendarId}`}
-                              style={{position: 'absolute', zIndex: 1000, marginLeft: '1rem'}}
+                              style={{position: 'absolute', zIndex: 1000, marginLeft: '-8rem', marginTop: '1.5rem'}}
                             >
                               <div className="calendar-menu">
                                 <div 

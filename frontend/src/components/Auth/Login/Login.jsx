@@ -42,7 +42,7 @@ function Login({ onLoginSuccess }) {
         if (user._id) {
           setError('');
           onLoginSuccess(user._id);
-          navigate('/home')
+          navigate('/calendar')
         } else {          
           setError('Incorrect login or email or password');
         }

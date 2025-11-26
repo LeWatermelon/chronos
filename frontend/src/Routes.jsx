@@ -17,7 +17,7 @@ const AppRoutes = () => {
 
   const [passwordResetToken, setPasswordResetToken] = useState('');
 
-  const authRoutes = ['/login', '/register', '/verify-email', '/password-reset', '/'];
+  const authRoutes = ['/login', '/register', '/verify-email', '/password-reset', '/home'];
   const showParticle = authRoutes.includes(location.pathname);
 
   function onLoginSuccess(userId) {
@@ -30,11 +30,12 @@ const AppRoutes = () => {
       {showParticle && <ParticleBackground />}
        <BodyClassController route={location.pathname} />
         <Routes>
-          <Route path="/home" element={<CalendarPage />} />
+          <Route path="/home" element={<LoginPage onLoginSuccess={onLoginSuccess} />} />
+          <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/login" element={<LoginPage onLoginSuccess={onLoginSuccess} />} />
+          <Route path="/" element={<LoginPage onLoginSuccess={onLoginSuccess} />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/verify-email" element={<VerifyEmailPage />} />
-          <Route path="/" element={<LoginPage onLoginSuccess={onLoginSuccess} />} />
           <Route path='/password-reset/:token' element={<PasswordResetWithTocken />} />
         </Routes>
    </>
