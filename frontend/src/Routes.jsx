@@ -17,7 +17,7 @@ const AppRoutes = () => {
 
   const [passwordResetToken, setPasswordResetToken] = useState('');
 
-  const authRoutes = ['/login', '/register', '/verify-email', '/password-reset', '/home'];
+  const authRoutes = ['/login', '/register', '/verify-email', '/password-reset', '/home', '/'];
   const showParticle = authRoutes.includes(location.pathname);
 
   function onLoginSuccess(userId) {
