@@ -15,7 +15,8 @@ async function handleCreateEvent(req, res) {
             due_date,
             reminder_time,
             is_all_day,
-            reminders
+            reminders,
+            color
         } = req.body;
 
         const calendar = await Calendar.findById(calendarId);
@@ -32,6 +33,7 @@ async function handleCreateEvent(req, res) {
             title,
             description,
             category,
+            color: color || '#4285F4',
             is_all_day: !!is_all_day,
             reminders: reminders || []
         };

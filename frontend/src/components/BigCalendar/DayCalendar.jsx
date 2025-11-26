@@ -135,7 +135,6 @@ export default function DayView({
   };
 
   const handleEventCreated = (data) => {
-    console.log("EVENT CREATED:", data);
     setPopup(null);
     if (onDataCreated) {
       onDataCreated('event', data);
@@ -145,6 +144,20 @@ export default function DayView({
   const getCalendarColor = (calendarId) => {
     const calendar = calendars.find(cal => cal._id === calendarId);
     return calendar?.color || '#2196F3';
+  };
+
+  const getEventColor = (event) => {
+    // Use event's own color if set, otherwise fall back to calendar color
+    return event.color || getCalendarColor(event.calendarId);
+  };
+
+  const hexToRgb = (hex) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : { r: 66, g: 133, b: 244 };
   };
 
   const renderTimeBlocks = (timeSlot) => {
@@ -171,12 +184,19 @@ export default function DayView({
             const showFullDetails = eventHeight >= 60;
             const showMinimalDetails = eventHeight >= 40 && eventHeight < 60;
             
+            const eventColor = getEventColor(event);
+            const calendarColor = getCalendarColor(event.calendarId);
+            const rgb = hexToRgb(eventColor);
+            const bgColor = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.75)`;
+            const textColor = "white"; // can't decide
+            
             return (
               <div
                 key={event._id}
                 className={`event-block ${event.category} ${isPast ? 'past' : ''}`}
                 style={{ 
-                  backgroundColor: getCalendarColor(event.calendarId),
+                  backgroundColor: bgColor,
+                  borderLeftColor: calendarColor,
                   top: `${topPosition}px`,
                   height: `${eventHeight}px`,
                   zIndex: 10 + index
@@ -186,21 +206,29 @@ export default function DayView({
               >
                 {showFullDetails ? (
                   <>
-                    <div className="event-time">
+                    <div className="event-time" style={{ color: textColor, opacity: 0.8 }}>
                       {formatEventTime(event.start_time || event.due_date || event.reminder_time)}
                     </div>
-                    <div className="event-title">{event.title}</div>
-                    {event.location && <div className="event-location">{event.location}</div>}
+                    <div className="event-title" style={{ color: textColor }}>
+                      {event.title}
+                    </div>
+                    {event.location && (
+                      <div className="event-location" style={{ color: textColor, opacity: 0.7 }}>
+                        {event.location}
+                      </div>
+                    )}
                   </>
                 ) : showMinimalDetails ? (
                   <>
-                    <div className="event-time">
+                    <div className="event-time" style={{ color: textColor, opacity: 0.8 }}>
                       {formatEventTime(event.start_time || event.due_date || event.reminder_time)}
                     </div>
-                    <div className="event-title">{event.title}</div>
+                    <div className="event-title" style={{ color: textColor }}>
+                      {event.title}
+                    </div>
                   </>
                 ) : (
-                  <div className="event-title-compact">
+                  <div className="event-title-compact" style={{ color: textColor }}>
                     {formatEventTime(event.start_time || event.due_date || event.reminder_time)} {event.title}
                   </div>
                 )}
