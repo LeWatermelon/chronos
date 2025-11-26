@@ -88,23 +88,38 @@
   padding: 0 1em;
 }
 
+/* Stacking multiple events in same slot */
+.calendar-cell .event-block:nth-child(1) {
+  top: 2px;
+}
+
+.calendar-cell .event-block:nth-child(2) {
+  top: 38px;
+}
+
+.calendar-cell .event-block:nth-child(3) {
+  top: 74px;
+}
+
 .event-block {
   position: absolute;
   left: 4px;
   right: 4px;
   padding: 8px 12px;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border-left: 3px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   min-height: 32px;
   z-index: 1;
+  /* Light background - set via inline style with opacity */
+  border-left: 4px solid;
+  /* Border color will match calendar color */
 }
 
 .event-block:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   transform: translateY(-1px);
   z-index: 2;
 }
@@ -112,28 +127,24 @@
 .event-title {
   font-size: 13px;
   font-weight: 600;
-  color: white;
   margin-bottom: 2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
+/* Text color set via inline style */
 .event-title-compact {
   font-size: 12px;
-  font-weight: 600;
-  color: white;
+  font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   line-height: 18px;
 }
 
 .event-location {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.9);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -150,11 +161,42 @@
 /* Event time display */
 .event-time {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.85);
   margin-bottom: 4px;
   font-weight: 500;
 }
 
-/*.event-block.reminder { background-color: #2196F3; }
-.event-block.task { background-color: #4CAF50; }
-.event-block.arrangement { background-color: #FF9800; }*/
+/* For events that span multiple hours */
+.event-block.multi-hour {
+  min-height: 60px;
+}
+
+/* Different opacity for past events */
+.event-block.past {
+  opacity: 0.6;
+}
+
+/* Color preset row for event colors */
+.color-preset-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.color-bubble {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.color-bubble:hover {
+  transform: scale(1.1);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.color-bubble.active {
+  border-color: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 0 2px white, 0 0 0 4px rgba(0, 0, 0, 0.2);
+}

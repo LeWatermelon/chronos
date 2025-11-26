@@ -106,6 +106,10 @@ const EventSchema = new mongoose.Schema(
         default: Date.now 
       }
     }],
+
+    color: { 
+        type: String
+    },
   },
   { timestamps: true }
 );

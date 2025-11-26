@@ -1,9 +1,16 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./NewEvent.css";
+
+const presetColors = [
+  "#4285F4", "#DB4437", "#F4B400", "#0F9D58",
+  "#AB47BC", "#00ACC1", "#FF7043", "#9E9D24",
+  "#795548", "#607D8B", "#E91E63", "#9C27B0"
+];
 
 export default function EditEvent({ event, onClose, onEventUpdated }) {
   const [title, setTitle] = useState(event.title || "");
   const [category, setCategory] = useState(event.category || "arrangement");
+  const [eventColor, setEventColor] = useState(event.color || "#4285F4");
   
   // Arrangement fields
   const [startTime, setStartTime] = useState(
@@ -55,9 +62,10 @@ export default function EditEvent({ event, onClose, onEventUpdated }) {
         title,
         category,
         description,
+        color: eventColor
       };
 
-      // Add category-specific fields
+      // Category-specific fields
       if (category === "arrangement") {
         updateData.start_time = new Date(startTime).toISOString();
         updateData.end_time = new Date(endTime).toISOString();
@@ -121,6 +129,37 @@ export default function EditEvent({ event, onClose, onEventUpdated }) {
           <option value="reminder">Reminder</option>
           <option value="task">Task</option>
         </select>
+      </div>
+
+      {/* Color Selection */}
+      <div className="popup-row">
+        <label>Event Color</label>
+        <input
+          type="color"
+          value={eventColor}
+          onChange={(e) => setEventColor(e.target.value)}
+          style={{
+            width: "50px",
+            height: "35px",
+            padding: 0,
+            borderRadius: "6px",
+            cursor: "pointer",
+          }}
+        />
+      </div>
+
+      <div className="popup-row">
+        <label>Preset colors</label>
+        <div className="color-preset-row">
+          {presetColors.map((c) => (
+            <div
+              key={c}
+              className={`color-bubble ${eventColor === c ? "active" : ""}`}
+              style={{ backgroundColor: c }}
+              onClick={() => setEventColor(c)}
+            ></div>
+          ))}
+        </div>
       </div>
 
       {category === "arrangement" && (

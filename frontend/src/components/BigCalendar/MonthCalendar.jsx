@@ -158,9 +158,9 @@ export default function MonthView({
                         {new Date(
                           event.start_time || event.due_date || event.reminder_time
                         ).toLocaleTimeString('en-US', {
-                          hour: 'numeric',
+                          hour: '2-digit',
                           minute: '2-digit',
-                          hour12: true
+                          hour12: false
                         })}
                       </span>
                     </div>
