@@ -13,7 +13,8 @@ function Register() {
   const [lastname, setLastname] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [country, setCountry] = useState('');
+  const [country, setCountry] = useState('UA');
+  const [timeFormat, setTimeFormat] = useState('24'); 
 
   function onLoginChange(event) {
     setlogin(event.target.value);
@@ -39,10 +40,6 @@ function Register() {
     setLastname(event.target.value);
   }
 
-  function onCountryChange(event) {
-    setCountry(event.target.value);
-  }
-
   function onSubmitRegister() {
     setError('');
     // setIsLoading(true);
@@ -61,6 +58,7 @@ function Register() {
         firstname: firstname,
         lastname: lastname,
         country: country,
+        time_format: timeFormat
       })
     })
     .then(response => response.json())
@@ -123,15 +121,13 @@ function Register() {
                       onChange={onFirstnameChange}
                     />
                   </div>
+
                   <div className="mt3">
-                    <label className="db fw6 lh-copy f6" htmlFor="last-name">Last name</label>
-                    <input 
-                      className="pa2 input-reset ba b--black bg-transparent w-100"
-                      type="text" 
-                      name="last-name" 
-                      id="last-name" 
-                      onChange={onLastnameChange}
-                    />
+                    <label className="db fw6 lh-copy f6" htmlFor="Country">Country</label>
+                    <select value={country} onChange={(e) => setCountry(e.target.value)} className="pa2 input-reset ba b--black bg-transparent w-100">
+                      <option value="UA">Ukraine</option>
+                      <option value="DE">Germany</option>
+                    </select>
                   </div>
                 </div>
 
@@ -160,10 +156,28 @@ function Register() {
                   </div>
 
                   <div className="mt3">
-                    <label className="db fw6 lh-copy f6" htmlFor="Country">Country</label>
-                    <select value={country} onChange={e => onCountryChange(e.target.value)} className="pa2 input-reset ba b--black bg-transparent w-100">
-                      <option value="UA">Ukraine</option>
-                      <option value="DE">Germany</option>
+                    <label className="db fw6 lh-copy f6" htmlFor="last-name">Last name</label>
+                    <input 
+                      className="pa2 input-reset ba b--black bg-transparent w-100"
+                      type="text" 
+                      name="last-name" 
+                      id="last-name" 
+                      onChange={onLastnameChange}
+                    />
+                  </div>
+
+                  <div className="mt3">
+                    <label className="db fw6 lh-copy f6" htmlFor="time-format">
+                      Time format
+                    </label>
+                    <select
+                      value={timeFormat}
+                      onChange={(e) => setTimeFormat(e.target.value)}
+                      className="pa2 input-reset ba b--black bg-transparent w-100"
+                      id="time-format"
+                    >
+                      <option value="24">24-hour</option>
+                      <option value="12">12-hour (AM/PM)</option>
                     </select>
                   </div>
                 </div>

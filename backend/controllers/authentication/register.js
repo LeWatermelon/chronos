@@ -3,7 +3,7 @@ import Calendar from "../../database/models/Calendar.js";
 import EmailVerification from "../../database/models/EmailVerification.js";
 
 async function handleRegister(req, res, bcrypt, nodemailer) {
-    const { login, password, password_confirmation, firstname, lastname, email } = req.body;
+    const { login, password, password_confirmation, firstname, lastname, email, country, time_format } = req.body;
 
     try {
         if (password !== password_confirmation) {
@@ -54,7 +54,9 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
                 locale: "en-US",
                 timezone: "UTC",
                 calendars: [],
-                is_email_confirmed: false
+                is_email_confirmed: false,
+                country: country,
+                time_format: time_format
             });
         }
 

@@ -1,13 +1,33 @@
 import { useState } from "react";
 import { useSettings } from "../SettingsContext/SettingsContext";
+import { useNavigate } from 'react-router-dom';
 import "./NewEvent.css";
 
 export default function Settings({ onClose }) {
+  const navigate = useNavigate();
+  
   const { settings, updateSettings } = useSettings();
 
   const [country, setCountry] = useState(settings.country);
   const [timeFormat, setTimeFormat] = useState(settings.timeFormat);
   const [isLoggedOut, setIsLoggedOut] = useState(settings.isLoggedOut);
+
+   async function logout() {
+      try {
+        const res = await fetch('http://localhost:3000/api/auth/logout', {
+          method: 'POST',
+          credentials: 'include',
+        });
+
+        if (res.ok) {
+          navigate('/login')
+        } else {
+          console.error('Error when logout:', await res.text());
+        }
+      } catch (err) {
+        console.error('Logout failed:', err);
+      }
+  }
 
   function handleSubmit() {
     updateSettings({
@@ -25,8 +45,8 @@ export default function Settings({ onClose }) {
       <label>Country:</label>
       <select value={country} onChange={e => setCountry(e.target.value)}>
         <option>Ukraine</option>
-        <option>USA</option>
-        <option>UK</option>
+        {/* <option>USA</option> */}
+        {/* <option>UK</option> */}
         <option>Germany</option>
       </select>
 
@@ -36,14 +56,16 @@ export default function Settings({ onClose }) {
         <option value="12h">12-hour</option>
       </select>
 
-      <label>
+      {/* <label>
         <input
           type="checkbox"
           checked={isLoggedOut}
           onChange={() => setIsLoggedOut(!isLoggedOut)}
         />
         Log out on next start
-      </label>
+      </label> */}
+
+      <p className="f4 link dim black db pointer underline" onClick={logout}>Log Out</p>
 
       <button className="create-btn" onClick={handleSubmit}>
         Save changes
