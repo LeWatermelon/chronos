@@ -81,7 +81,7 @@ function VerifyEmail() {
 
                             <div className="flex-container">
                                 <form onSubmit={handleSubmit} className="mt-4">
-                                    <div className="flex items-center justify-center gap-3">
+                                    <div className="flex items-center justify-center gap-2">
                                         {otp.map((digit, i) => (
                                             <input
                                                 key={i}
@@ -91,7 +91,7 @@ function VerifyEmail() {
                                                 value={digit}
                                                 onChange={(e) => handleChange(e, i)}
                                                 onPaste={handlePaste}
-                                                className="w3 h3 tc f2 ma2 br2 mt3 input-square"
+                                                className="input-square"
                                             />
                                         ))}
                                     </div>

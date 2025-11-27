@@ -3,12 +3,12 @@ import Calendar from "../../database/models/Calendar.js";
 import EmailVerification from "../../database/models/EmailVerification.js";
 
 //addited 
-import holidayFetch from "../hollidayFetch.js";
-import handleCreateEvent from "../event/createEvent.js";
+import holidayFetch from "../holidays/hollidayFetch.js";
+// import handleCreateEvent from "../event/createEvent.js";
 //
 
 async function handleRegister(req, res, bcrypt, nodemailer) {
-    const { login, password, password_confirmation, firstname, lastname, email } = req.body;
+    const { login, password, password_confirmation, firstname, lastname, email, locale } = req.body;
 
     try {
         if (password !== password_confirmation) {
@@ -48,6 +48,7 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
             userToUpdate.full_name = `${firstname} ${lastname}`;
             userToUpdate.email = email;
             userToUpdate.updatedAt = new Date();
+            userToUpdate.locale = locale;
 
             newUser = await userToUpdate.save();
         } else {
@@ -56,7 +57,7 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
                 password_hash: hash,
                 full_name: `${firstname} ${lastname}`,
                 email,
-                locale: "en-US",
+                locale,
                 timezone: "UTC",
                 calendars: [],
                 is_email_confirmed: false
@@ -83,14 +84,16 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
 
         let year = new Date().getFullYear();
         let holidays = await holidayFetch(newUser.locale, year);
-        console.log('hollidays:', holidays);
+        console.log('86 register hollidays:', holidays);
+        console.log('register 87:',year)
+        console.log(newUser.locale)
 
         for (const holiday of holidays) {
             const eventData = {
                 title: holiday.name,
                 description: holiday.description,
                 type: 'arrengement',
-                participants: newUser._id,
+                participants: [newUser._id],
                 start_time: new Date(holiday.date.iso),
                 end_time: new Date(holiday.date.iso),
                 reminder_time: 15,
@@ -98,13 +101,17 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
                 reminders: [15]
             };
 
-            await fetch(`http://localhost:3000/api/calendars/${holidayCalendar._id}/events`, {
+            const response = await fetch(`http://localhost:3000/api/calendars/${holidayCalendar._id}/events`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
                 body: JSON.stringify(eventData)
-            });
-        }
+                });
+
+                if (!response.ok) {
+                console.error("Failed to create event:", await response.text());
+                }
+            }
 
         newUser.calendars.push(defaultCalendar._id);
         newUser.calendars.push(holidayCalendar._id);

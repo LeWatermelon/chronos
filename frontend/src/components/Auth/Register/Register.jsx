@@ -59,7 +59,7 @@ function Register() {
         password_confirmation: passwordConfirmation,
         firstname: firstname,
         lastname: lastname,
-        country: country,
+        locale: country,
       })
     })
     .then(response => response.json())
@@ -162,8 +162,8 @@ function Register() {
                     <label className="db fw6 lh-copy f6" htmlFor="Country">Country</label>
                     <select value={country} onChange={e => onCountryChange(e.target.value)} className="pa2 input-reset ba b--black bg-transparent w-100">
                       <option value="">Select a country</option>
-                      <option value="UA">Ukraine</option>
-                      <option value="DE">Germany</option>
+                      <option value="ua">Ukraine</option>
+                      <option value="de">Germany</option>
                     </select>
                   </div>
                 </div>
