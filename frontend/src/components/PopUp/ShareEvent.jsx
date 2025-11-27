@@ -12,18 +12,47 @@ export default function ShareEvent({ event, onClose, onShared }) {
   useEffect(() => {
     if (!event || !event._id) return;
     
-    // Check if event already has shared links
-    if (event.shared_with && event.shared_with.length > 0) {
-      // Use the first existing share token
-      const firstShare = event.shared_with[0];
-      const link = `http://localhost:5173/event/shared/${firstShare.shareToken}`;
-      setShareLink(link);
-    } else {
-      // Generate a preview token (malenkij yesho, not saved yet)
-      const previewToken = btoa(event._id).replace(/=/g, '').substring(0, 32);
-      const link = `http://localhost:5173/event/shared/${previewToken}`;
-      setShareLink(link);
+    const generateShareLink = async () => {
+      try {
+        // Generate share link
+        const res = await fetch(
+          `http://localhost:3000/api/events/${event._id}/generate-share-link`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ permission })
+          }
+        );
+
+        // Check if event already has shared links
+        /* if (event.shared_with && event.shared_with.length > 0) {
+        const firstShare = event.shared_with[0];
+        const link = `http://localhost:5173/event/shared/${firstShare.shareToken}`;
+        setShareLink(link);
+        } else {
+          // Generate a preview token (malenkij yesho, not saved yet)
+          const previewToken = btoa(event._id).replace(/=/g, '').substring(0, 32);
+          const link = `http://localhost:5173/event/shared/${previewToken}`;
+          setShareLink(link);
+        }*/
+        if (res.ok) {
+          const data = await res.json();
+          setShareLink(data.shareLink);
+        } else {
+          // Generate a preview token (malenkij yesho, not saved yet)
+          const previewToken = btoa(event._id).replace(/=/g, '').substring(0, 32);
+          setShareLink(`http://localhost:5173/event/shared/${previewToken}`);
+        }
+      } catch (err) {
+          console.error('Failed to generate share link:', err);
+          // Fallback: generate preview link
+          const previewToken = btoa(event._id).replace(/=/g, '').substring(0, 32);
+          setShareLink(`http://localhost:5173/event/shared/${previewToken}`);
+        }
     }
+
+    generateShareLink();
   }, [event]);
 
   if (!event || !event._id) {
@@ -182,7 +211,10 @@ export default function ShareEvent({ event, onClose, onShared }) {
         <div style={{ marginTop: "1.5rem", paddingTop: "1rem", borderTop: "1px solid #ddd" }}>
           <label style={{ marginBottom: "0.5rem", display: "block" }}>Shared with:</label>
           <div style={{ maxHeight: "150px", overflowY: "auto" }}>
-            {event.shared_with.map((share, index) => (
+            {/*event.shared_with.map((share, index) => ( */
+            event.shared_with
+              .filter(share => share.email) // Only show email shares, not public links
+              .map((share, index) => (
               <div 
                 key={index}
                 style={{ 
