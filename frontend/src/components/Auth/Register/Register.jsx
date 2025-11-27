@@ -45,6 +45,8 @@ function Register() {
     // setIsLoading(true);
     const loaderTimeout = setTimeout(() => setIsLoading(true), 150);
 
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
     // fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
     fetch(`http://localhost:3000/api/auth/register`, {
       method: 'POST',
@@ -58,7 +60,8 @@ function Register() {
         firstname: firstname,
         lastname: lastname,
         country: country,
-        time_format: timeFormat
+        time_format: timeFormat,
+        timezone
       })
     })
     .then(response => response.json())

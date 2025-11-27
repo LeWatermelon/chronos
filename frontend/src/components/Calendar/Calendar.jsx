@@ -16,6 +16,8 @@ import DayView from '../BigCalendar/DayCalendar';
 import MonthView from '../BigCalendar/MonthCalendar';
 import YearView from '../BigCalendar/YearCalendar';
 
+import { useSettings } from "../SettingsContext/SettingsContext";
+
 export default function Calendar() {
   const [view, setSelectedView] = useState('Week');
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -37,6 +39,23 @@ export default function Calendar() {
   const [popupPosition, setPopupPosition] = useState({ x: 200, y: 120 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // const [userSettings, setUserSettings] = useState(null);
+
+  // useEffect(() => {
+  //   fetch("http://localhost:3000/api/auth/me", { credentials: "include" })
+  //     .then(res => res.json())
+  //     .then(user => {        
+  //       if (user && user._id) {
+  //         setUserSettings({
+  //           country: user.country,
+  //           timeFormat: user.time_format
+  //         });
+  //       }
+  //     })
+  //     .catch(() => {});
+  // }, []);
+
+  const { settings } = useSettings();
 
   useEffect(() => {
     const fetchCalendars = async () => {
@@ -197,6 +216,7 @@ export default function Calendar() {
       currentDate,
       events: visibleEvents,
       calendars: calendars,
+      settings: settings,
       onDataCreated: handleDataCreated,
       onEventClick: (event, e) => {
         const rect = e?.target?.getBoundingClientRect();

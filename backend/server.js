@@ -28,6 +28,7 @@ import handleLogin from "./controllers/authentication/login.js";
 import handleLogout from "./controllers/authentication/logout.js";
 import handlePasswordReset from "./controllers/authentication/passwordReset.js";
 import handlePasswordResetConfirm from "./controllers/authentication/passwordResetConfirm.js";
+import handleMe from "./controllers/authentication/me.js";
 // ~~~ Calendar ~~~
 import handleCreateCalendar from "./controllers/calendar/createCalendar.js";
 import handleGetCalendars from "./controllers/calendar/getCalendars.js";
@@ -48,6 +49,7 @@ import handleShareEvent from "./controllers/event/shareEvent.js";
 import handleGetSharedEvent from "./controllers/event/getSharedEvent.js";
 // ~~~ User ~~~
 import handleSearchUsers from "./controllers/user/searchUsers.js";
+import handleUpdateSettings from "./controllers/user/updateSettings.js";
 
 // middleware
 import requireAuth from "./middleware/requireAuth.js";
@@ -82,6 +84,7 @@ async function start() {
     app.get('/api/users/search', requireAuth, (req, res) => { handleSearchUsers(req, res) });
     app.get('/api/calendars/:calendarId/members', requireAuth, (req, res) => { handleGetMembers(req, res) });
     app.get('/api/calendars/shared/:shareToken', (req, res) => { handleGetSharedCalendar(req, res) });
+    app.get('/api/auth/me', (req, res) => { handleMe(req, res) });
 
     // === POST Requests ===
     app.post('/api/auth/register', (req, res) => { handleRegister(req, res, bcrypt, nodemailer) });
@@ -101,6 +104,7 @@ async function start() {
     // === PATCH Requests ===
     app.patch('/api/calendars/:id', requireAuth, (req, res) => { handleUpdateCalendar(req, res) });
     app.patch('/api/events/:id', requireAuth, (req, res) => { handleUpdateEvent(req, res) });
+    app.patch('/api/user/settings', requireAuth, (req, res) => { handleUpdateSettings(req, res) });
 
     // === DELETE Requests ===
     app.delete('/api/calendars/:id', requireAuth, (req, res) => { handleDeleteCalendar(req, res) });
