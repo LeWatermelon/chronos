@@ -49,6 +49,13 @@ export default function SmallCalendar({ variant='default', year, month, onDaySel
       });
     }
 
+     while (days.length < 42) {
+    days.push({
+      day: days.length,
+      className: "inactive"
+    });
+  }
+  
     return days;
   }
   const days = getDays();

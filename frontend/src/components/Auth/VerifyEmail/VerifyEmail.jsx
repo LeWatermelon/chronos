@@ -117,7 +117,7 @@ function VerifyEmail() {
             </article>
 
             {error && (
-                <p style={{ color: 'red', fontWeight: 'bold' }}> 
+                <p className="message" style={{ color: 'red' }}> 
                     &#10006; {error}
                 </p>
             )}

@@ -220,7 +220,7 @@ export default function Calendar() {
       case "Month":
         return <MonthView {...commonProps} />;
       case "Year":
-        return <YearView {...commonProps} />;
+        return <YearView {...commonProps} DaySelect={handleSmallCalendarDaySelect} />;
       case "Week":
       default:
         return <WeekView {...commonProps} />;
@@ -304,29 +304,35 @@ export default function Calendar() {
 
           <div className="calendar-content">
             <div className="calendar-toolbar">
-              <Button text="Today" onClick={handleToday} />
               
+
               <div className="toolbar-left">
-                <i className="fa-solid fa-chevron-left black " onClick={handlePrev}></i>
-                <i className="fa-solid fa-chevron-right black" onClick={handleNext}></i>
-              </div>
-              
-              <span>
+                <Button  className="view-btn" text="Today" onClick={handleToday} />
+
+              <span className="toolbar-month">
                 {currentInfo.year && currentInfo.month !== null
                   ? `${currentInfo.day ? currentInfo.day + " " : ""} ${months[currentInfo.month]} ${currentInfo.year}`
                   : "Loading..."}
               </span>
 
+                <div style={{display: 'flex'}}>
+                <i className="fa-solid fa-chevron-left black " onClick={handlePrev}></i>
+                <i className="fa-solid fa-chevron-right black" onClick={handleNext}></i>
+                </div>
+              </div>
+              
+
               <div className="toolbar-center">
-                <Button text="Day" onClick={() => setSelectedView('Day')} />
-                <Button text="Week" onClick={() => setSelectedView('Week')} />
-                <Button text="Month" onClick={() => setSelectedView('Month')} />
-                <Button text="Year" onClick={() => setSelectedView('Year')} />
+                <Button className="view-btn" text="Day" onClick={() => setSelectedView('Day')} />
+                <Button className="view-btn" text="Week" onClick={() => setSelectedView('Week')} />
+                <Button className="view-btn" text="Month" onClick={() => setSelectedView('Month')} />
+                <Button className="view-btn" text="Year" onClick={() => setSelectedView('Year')} />
+                  
+                <div className="toolbar-right">
+                  <SearchView placeholder="Search" />
+                </div>
               </div>
 
-              <div className="toolbar-right">
-                <SearchView placeholder="Search" />
-              </div>
             </div>
 
             <div className="big-calendar">

@@ -9,6 +9,8 @@ import VerifyEmailPage from './components/Auth/VerifyEmail/VerifyEmail';
 import ParticleBackground from './components/ParticleBackground/ParticleBackground'
 import BodyClassController from './components/BodyClassController/BodyClassController'
 import PasswordResetWithTocken from './components/Auth/PasswordReset/PasswordReset';
+import SharedEventView from './components/SharedEventView/SharedEventView';
+import SharedCalendarView from './components/SharedCalendarView/SharedCalendarView';
 
 const AppRoutes = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -18,7 +20,7 @@ const AppRoutes = () => {
   const [passwordResetToken, setPasswordResetToken] = useState('');
 
   const authRoutes = ['/login', '/register', '/verify-email', '/password-reset', '/home', '/'];
-  const showParticle = authRoutes.includes(location.pathname);
+  const showParticle = authRoutes.includes(location.pathname) || location.pathname.startsWith('/password-reset');
 
   function onLoginSuccess(userId) {
     setIsSignedIn(true);
@@ -37,6 +39,8 @@ const AppRoutes = () => {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path='/password-reset/:token' element={<PasswordResetWithTocken />} />
+          <Route path="/event/shared/:shareToken" element={<SharedEventView />} />
+          <Route path="/calendar/shared/:shareToken" element={<SharedCalendarView />} />
         </Routes>
    </>
   );

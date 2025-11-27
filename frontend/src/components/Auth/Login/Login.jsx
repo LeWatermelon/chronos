@@ -168,13 +168,13 @@ function Login({ onLoginSuccess }) {
       </div>
       
       {error && (
-        <p style={{ color: 'red', fontWeight: 'bold' }}> 
+        <p className='message' style={{ color: 'red'}}> 
           &#10006; {error}
         </p>
       )}
 
       {message && (
-        <p style={{ color: 'green', fontWeight: 'bold' }}> 
+        <p className='message' style={{ color: 'green'}}> 
           &#10004; {message}
         </p>
       )}

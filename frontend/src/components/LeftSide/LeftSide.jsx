@@ -2,14 +2,6 @@ import { useState, useEffect } from 'react';
 
 import CheckBox from '../ui/CheckBox/CheckBox';
 import MiniCalendar from '../SmallCalendar/SmallCalendar';
-/*import Popup from '../PopUp/PopUp';
-import NewEvent from '../PopUp/NewEvent';
-import Settings from '../PopUp/Settings';
-import NewCalendar from '../PopUp/NewClendar';
-import EditCalendar from '../PopUp/EditCalendar';
-import InviteUsers from '../PopUp/InviteUsers';
-import ManageMembers from '../PopUp/ManageMembers';*/
-
 import PopupController from '../PopUp/PopUpController';
 
 import './LeftSide.css';
@@ -259,7 +251,7 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) =>
                           {menuCalendarId === calendar._id && showMenu && (
                             <div
                               id={`calendar-menu-${menuCalendarId}`}
-                              style={{position: 'absolute', zIndex: 1000, marginLeft: '-8rem', marginTop: '1.5rem'}}
+                              style={{position: 'absolute', zIndex: 1000, marginLeft: '-8.5rem', marginTop: '1.5rem'}}
                             >
                               <div className="calendar-menu">
                                 <div 

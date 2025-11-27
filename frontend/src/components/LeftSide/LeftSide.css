@@ -5,7 +5,7 @@
   position: relative;
   border-right: 1px solid #5b389e;
   height: 100vh;
-  margin-left: 1.5em; 
+  margin-left: 1.3em; 
 }
 
 .left-side-container {
@@ -71,7 +71,7 @@
   flex-direction: column;
   gap: 1.5rem;
   width: 100%;
-  height: 20vh;
+  height: 25vh;
   padding-bottom: 1em;
   margin-bottom: 2em; 
   overflow-y: scroll;
@@ -93,7 +93,6 @@
   font-weight: 400;
   line-height: 2rem;
   color: white;
-  
 }
 
 /* .rotate-180 {
@@ -149,29 +148,6 @@
   list-style: none;
 }
 
-@media (min-width: 1024px) {
-  .left-side {
-    width: 25%;
-    flex-shrink: 0;
-    margin-bottom: 0;
-  }
-  .left-side-container {
-    padding: 0;
-  }
-  .header {
-    flex-direction: row;
-    justify-content: space-around;
-  }
-  .left-side.collapsed {
-    width: 50px;
-  }
-}
-
-@media (max-width: 960px){
-  .smallCalendar{
-    display: none; 
-  }
-}
 
 .elipse-menu {
   display: flex;
@@ -183,8 +159,8 @@
   flex-direction: column;
   gap: 8px;
   padding: 10px;
-  min-width: 200px;
-  background-color: rgb(231, 243, 250);
+  min-width: fit-content;
+  background-color: rgb(221, 218, 247);
   border-radius: 10px;
   margin-bottom: 1em;
 }
@@ -210,4 +186,58 @@
 }
 .checkbox-label{
   color: rgb(228, 225, 225);
+}
+
+@media (min-width: 1024px) {
+  .left-side {
+    width: 25%;
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
+  .left-side-container {
+    padding: 0;
+  }
+  .header {
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  .left-side.collapsed {
+    width: 50px;
+  }
+}
+
+@media (max-width: 960px){
+  .smallCalendar{
+    display: none; 
+  }
+
+  .calendar-section{
+    height: 60vh;
+  }
+  .logo {
+    font-size: 0.7rem;
+    font-weight: 300;
+    line-height: 1rem;
+  }
+
+  .left-side {
+    width: 22%;
+    margin-bottom: 1.5rem;
+    /* mb-7 */
+    position: relative;
+    border-right: 1px solid #5b389e;
+    height: 100vh;
+    margin-left: 1em;
+  }
+
+  header {
+    display: flex;
+    flex-direction: row;
+    /* flex-wrap: wrap; */
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+    margin-top: 1em;
+  }
 }

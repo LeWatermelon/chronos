@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import './BigCalendar.css';
 
 export default function BigCalendar({ children }){

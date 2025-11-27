@@ -108,13 +108,16 @@
   grid-template-rows: repeat(6, 1fr);
   /* always 6 rows */
   width: 100%;
-  height: 80%;
+  height: 90%;
+  min-height: 50px;
   gap: 0;
   /* optional */
+  background-color: rgba(240, 248, 255, 0.167);
 }
 
 .mon-days li {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: 1rem;
@@ -150,20 +153,16 @@
   background: #f2f2f2;
 }
 
-.mon-days span {
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5rem;
-  color: var(--text-light);
-  text-align: center;
-}
 /* event slot */
-
-.day-slots{
+.day-slots {
   flex-direction: column;
 }
 
 .event-slot{
-  font-size: 0.5em;
+  font-size: 0.9em;
   font-weight: 400;
+  height: fit-content;
 }
+/* .event-time{
+  font-size: 1em;
+} */

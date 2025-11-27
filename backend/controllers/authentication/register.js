@@ -2,6 +2,11 @@ import User from "../../database/models/User.js";
 import Calendar from "../../database/models/Calendar.js";
 import EmailVerification from "../../database/models/EmailVerification.js";
 
+//addited 
+import holidayFetch from "../hollidayFetch.js";
+import handleCreateEvent from "../event/createEvent.js";
+//
+
 async function handleRegister(req, res, bcrypt, nodemailer) {
     const { login, password, password_confirmation, firstname, lastname, email } = req.body;
 
@@ -66,7 +71,43 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
             members: []
         });
 
+        //this aria addited by polina, could brake all code 
+        //create holliday calendar 
+        const holidayCalendar = await Calendar.create({
+            owner: newUser._id,
+            title: `holiday calendar`,
+            color: "#f321dbff",
+            is_visible: true,
+            members: [newUser._id]
+        });
+
+        let year = new Date().getFullYear();
+        let holidays = await holidayFetch(newUser.locale, year);
+        console.log('hollidays:', holidays);
+
+        for (const holiday of holidays) {
+            const eventData = {
+                title: holiday.name,
+                description: holiday.description,
+                type: 'arrengement',
+                participants: newUser._id,
+                start_time: new Date(holiday.date.iso),
+                end_time: new Date(holiday.date.iso),
+                reminder_time: 15,
+                is_all_day: true,
+                reminders: [15]
+            };
+
+            await fetch(`http://localhost:3000/api/calendars/${holidayCalendar._id}/events`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(eventData)
+            });
+        }
+
         newUser.calendars.push(defaultCalendar._id);
+        newUser.calendars.push(holidayCalendar._id);
         await newUser.save();
 
         // сгенерировать 6-значный код и срок действия

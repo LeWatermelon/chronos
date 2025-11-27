@@ -40,3 +40,10 @@ main{
   overflow: hidden; /* Блокирует вертикальную и горизонтальную прокрутку */
   height: 100%;    /* Защищает от прокрутки через высоту */
 }
+
+.message{
+  font-weight: bold;
+  position: fixed;
+  top: 2em;
+  left: 40vw;
+}
