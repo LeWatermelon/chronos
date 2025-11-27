@@ -47,6 +47,7 @@ import handleUpdateEvent from "./controllers/event/updateEvent.js";
 import handleDeleteEvent from "./controllers/event/deleteEvent.js";
 import handleShareEvent from "./controllers/event/shareEvent.js";
 import handleGetSharedEvent from "./controllers/event/getSharedEvent.js";
+import handleGenerateEventShareLink from "./controllers/event/generateShareLink.js";
 // ~~~ User ~~~
 import handleSearchUsers from "./controllers/user/searchUsers.js";
 import handleUpdateSettings from "./controllers/user/updateSettings.js";
@@ -98,6 +99,7 @@ async function start() {
     app.post('/api/calendars/:calendarId/invite', requireAuth, (req, res) => { handleInviteToCalendar(req, res, nodemailer) });
     app.post('/api/calendars/:calendarId/members/remove', requireAuth, (req, res) => { handleRemoveMember(req, res) });
     app.post('/api/events/:eventId/share', requireAuth, (req, res) => { handleShareEvent(req, res, nodemailer) });
+    app.post('/api/events/:eventId/generate-share-link', requireAuth, (req, res) => { handleGenerateEventShareLink(req, res) });
     app.post('/api/calendars/:calendarId/share', requireAuth, (req, res) => { handleShareCalendar(req, res, nodemailer) });
     app.post('/api/calendars/:calendarId/generate-share-link', requireAuth, (req, res) => { handleGenerateShareLink(req, res) });
 
