@@ -3,23 +3,29 @@ import { createContext, useContext, useState, useEffect } from "react";
 const SettingsContext = createContext();
 
 export function SettingsProvider({ children }) {
-  const [settings, setSettings] = useState({
+  const defaultSettings = {
     country: "Ukraine",
-    timeFormat: "24h",
-    isLoggedOut: false,
-  });
+    timeFormat: "24h"
+  };
+  const [settings, setSettings] = useState(defaultSettings);
 
-  // Load from localStorage on first render
+  // Загружаем настройки при первом рендере
   useEffect(() => {
-    const saved = localStorage.getItem("appSettings");
-    if (saved) {
-      setSettings(JSON.parse(saved));
-    }
+    fetch("http://localhost:3000/api/auth/me", { credentials: "include" })
+      .then(res => res.json())
+      .then(user => {        
+        if (user && user._id) {
+          setSettings({
+            country: user.country,
+            timeFormat: user.time_format
+          });
+        }
+      })
+      .catch(() => {});
   }, []);
 
-  // Save settings automatically whenever they change
   useEffect(() => {
-    localStorage.setItem("appSettings", JSON.stringify(settings));
+    console.log("settings UPDATED:", settings);
   }, [settings]);
 
   function updateSettings(newValues) {
@@ -33,7 +39,6 @@ export function SettingsProvider({ children }) {
   );
 }
 
-// Custom hook for ease of use
 export function useSettings() {
   return useContext(SettingsContext);
 }

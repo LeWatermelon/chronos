@@ -23,9 +23,9 @@ async function handleLogin(req, res, bcrypt) {
 
         // добавить сессию
         req.session.user = {
-            id: user.id,
+            id: user._id,
             login: user.login
-        };
+        };        
 
         // вернуть пользователя без пароля
         const { password_hash, ...safeUser } = user.toObject();

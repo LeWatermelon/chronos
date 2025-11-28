@@ -77,7 +77,7 @@ const EventSchema = new mongoose.Schema(
     shared_with: [{
       email: { 
         type: String, 
-        required: true 
+        // required: true // мешает публичности ссылко
       },
       userid: { 
         type: mongoose.Schema.Types.ObjectId, 
@@ -106,6 +106,10 @@ const EventSchema = new mongoose.Schema(
         default: Date.now 
       }
     }],
+
+    color: { 
+        type: String
+    },
   },
   { timestamps: true }
 );

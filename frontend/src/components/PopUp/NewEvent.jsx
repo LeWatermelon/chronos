@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import "./NewEvent.css";
 
+const presetColors = [
+  "#4285F4", "#DB4437", "#F4B400", "#0F9D58",
+  "#AB47BC", "#00ACC1", "#FF7043", "#9E9D24",
+  "#795548", "#607D8B", "#E91E63", "#9C27B0"
+];
+
 export default function NewEvent({ 
   onClose, 
   onCreate,
@@ -16,13 +22,16 @@ export default function NewEvent({
   const [allDay, setAllDay] = useState(false);
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
-  const [reminderMinutes, setReminderMinutes] = useState(15); // minutes before
+  const [reminderMinutes, setReminderMinutes] = useState(15);
   const [reminderDateTime, setReminderDateTime] = useState("");
   const [participants, setParticipants] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [calendarId, setCalendarId] = useState("");
   const [myCalendars, setMyCalendars] = useState([]);
   const [otherCalendars, setOtherCalendars] = useState([]);
+  const [eventColor, setEventColor] = useState("#4285F4");
+  const [hasManuallySetColor, setHasManuallySetColor] = useState(false);
+  const [initialColorSet, setInitialColorSet] = useState(false);
 
   useEffect(() => {
     setCategory(defaultCategory);
@@ -35,7 +44,6 @@ export default function NewEvent({
   }, [propCalendarId]);
 
   useEffect(() => {
-    //fetch(`${import.meta.env.VITE_API_URL}/api/calendars`, {
     fetch(`http://localhost:3000/api/calendars`, {
       credentials: "include"
     })
@@ -44,13 +52,38 @@ export default function NewEvent({
         setMyCalendars(data.myCalendars ?? []);
         setOtherCalendars(data.otherCalendars ?? []);
         
-        // Auto-select first calendar if not provided
+        // Set initial calendar and color
         if (!calendarId && data.myCalendars?.length > 0) {
-          setCalendarId(data.myCalendars[0]._id);
+          const firstCalendar = data.myCalendars[0];
+          setCalendarId(firstCalendar._id);
+          
+          // Only set initial color if not manually changed and not already set
+          if (!hasManuallySetColor && !initialColorSet) {
+            setEventColor(firstCalendar.color || "#4285F4");
+            setInitialColorSet(true);
+          }
         }
       })
       .catch(err => console.error("Calendar load error:", err));
   }, []);
+
+  // Update event color when calendar changes (only if user hasn't manually set a color)
+  const handleCalendarChange = (newCalendarId) => {
+    setCalendarId(newCalendarId);
+    
+    if (!hasManuallySetColor) {
+      const selectedCalendar = [...myCalendars, ...otherCalendars].find(c => c._id === newCalendarId);
+      if (selectedCalendar) {
+        setEventColor(selectedCalendar.color || "#4285F4");
+      }
+    }
+  };
+
+  // Track when user manually changes color
+  const handleColorChange = (newColor) => {
+    setEventColor(newColor);
+    setHasManuallySetColor(true);
+  };
 
   function combine(date, time) {
     return new Date(`${date}T${time}:00`);
@@ -63,7 +96,8 @@ export default function NewEvent({
     let eventData = { 
       title, 
       description, 
-      category, 
+      category,
+      color: eventColor,
       reminders: reminderMinutes ? [reminderMinutes] : [] 
     };
 
@@ -90,7 +124,6 @@ export default function NewEvent({
     }
 
     try {
-      //const res = await fetch(`${import.meta.env.VITE_API_URL}/api/calendars/${calendarId}/events`, {
       const res = await fetch(`http://localhost:3000/api/calendars/${calendarId}/events`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -106,7 +139,6 @@ export default function NewEvent({
 
       const saved = await res.json();
       
-      // Call both callbacks if provided
       if (onCreate) onCreate(saved);
       if (onEventCreated) onEventCreated(saved);
       
@@ -130,7 +162,7 @@ export default function NewEvent({
       </div>
 
       <label>Choose calendar:</label>
-      <select value={calendarId} onChange={e => setCalendarId(e.target.value)}>
+      <select value={calendarId} onChange={e => handleCalendarChange(e.target.value)}>
         <option value="">Select a calendar</option>
         <optgroup label="My calendars">
           {myCalendars.map(c => <option key={c._id} value={c._id}>{c.title}</option>)}
@@ -157,6 +189,37 @@ export default function NewEvent({
           <option value="reminder">Reminder</option>
           <option value="task">Task</option>
         </select>
+      </div>
+
+      {/* Color Selection */}
+      <div className="popup-row">
+        <label>Event Color</label>
+        <input
+          type="color"
+          value={eventColor}
+          onChange={(e) => handleColorChange(e.target.value)}
+          style={{
+            width: "50px",
+            height: "35px",
+            padding: 0,
+            borderRadius: "6px",
+            cursor: "pointer",
+          }}
+        />
+      </div>
+
+      <div className="popup-row">
+        <label>Preset colors</label>
+        <div className="color-preset-row">
+          {presetColors.map((c) => (
+            <div
+              key={c}
+              className={`color-bubble ${eventColor === c ? "active" : ""}`}
+              style={{ backgroundColor: c }}
+              onClick={() => handleColorChange(c)}
+            ></div>
+          ))}
+        </div>
       </div>
 
       {category === "arrangement" && (

@@ -18,6 +18,15 @@ const UserSchema = new mongoose.Schema({
     full_name: {
         type: String
     },
+    country: {
+        type: String,
+        default: 'UA'
+    },
+    time_format: {
+        type: String,
+        enum: ['12', '24'],
+        default: '24'
+    },
     locale: { 
         type: String, 
         default: 'en-US' 

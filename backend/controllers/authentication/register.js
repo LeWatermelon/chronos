@@ -8,7 +8,8 @@ import holidayFetch from "../holidays/hollidayFetch.js";
 //
 
 async function handleRegister(req, res, bcrypt, nodemailer) {
-    const { login, password, password_confirmation, firstname, lastname, email, locale } = req.body;
+
+    const { login, password, password_confirmation, firstname, lastname, email, locale, time_format, timezone } = req.body;
 
     try {
         if (password !== password_confirmation) {
@@ -58,9 +59,11 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
                 full_name: `${firstname} ${lastname}`,
                 email,
                 locale,
-                timezone: "UTC",
+                timezone: timezone || "UTC",
                 calendars: [],
-                is_email_confirmed: false
+                is_email_confirmed: false,
+                country: country.toLowerCase(),
+                time_format: time_format
             });
         }
 
@@ -153,7 +156,7 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
             // console.log(`Password reset email sent to ${newUser.email}`);
         } catch (error) {
             // console.error('Error sending email confirmation email:', error);
-            res.status(500).send('Unable to register');
+            return res.status(500).json({ error: 'Unable to register' });
         }
 
         // добавить сессию

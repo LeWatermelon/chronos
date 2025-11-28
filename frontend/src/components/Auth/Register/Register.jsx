@@ -13,7 +13,8 @@ function Register() {
   const [lastname, setLastname] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [country, setCountry] = useState("UA");
+  const [country, setCountry] = useState('ua');
+  const [timeFormat, setTimeFormat] = useState('24'); 
 
   function onLoginChange(event) {
     setlogin(event.target.value);
@@ -42,13 +43,15 @@ function Register() {
   function onCountryChange(value) {
   setCountry(value);
 }
-
   function onSubmitRegister() {
     setError('');
     // setIsLoading(true);
     const loaderTimeout = setTimeout(() => setIsLoading(true), 150);
 
-    fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    // fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
+    fetch(`http://localhost:3000/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -60,6 +63,10 @@ function Register() {
         firstname: firstname,
         lastname: lastname,
         locale: country,
+
+        country: country,
+        time_format: timeFormat,
+        timezone
       })
     })
     .then(response => response.json())
@@ -88,7 +95,7 @@ function Register() {
           <div className="measure">
             <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
               <legend className="f1 fw6 ph0 mh0">Register</legend>
-              <div className="flex-container">
+              < div className="flex-container">
                 <div className="flex-item">
                   <div className="mt-3">
                     <label className="db fw6 lh-copy f6" htmlFor="login">Login <span style={{color: '#ff0000ff'}}>*</span></label>
@@ -164,6 +171,21 @@ function Register() {
                       <option value="">Select a country</option>
                       <option value="ua">Ukraine</option>
                       <option value="de">Germany</option>
+                    </select>
+                  </div>
+
+                  <div className="mt3">
+                    <label className="db fw6 lh-copy f6" htmlFor="time-format">
+                      Time format
+                    </label>
+                    <select
+                      value={timeFormat}
+                      onChange={(e) => setTimeFormat(e.target.value)}
+                      className="pa2 input-reset ba b--black bg-transparent w-100"
+                      id="time-format"
+                    >
+                      <option value="24">24-hour</option>
+                      <option value="12">12-hour (AM/PM)</option>
                     </select>
                   </div>
                 </div>
