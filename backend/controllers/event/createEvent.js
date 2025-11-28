@@ -1,6 +1,8 @@
 import Event from "../../database/models/Event.js";
 import Calendar from "../../database/models/Calendar.js";
+import User from "../../database/models/User.js";
 import hasCalendarPermission from "../../middleware/checkCalendarPermission.js";
+import crypto from "crypto";
 
 async function handleCreateEvent(req, res) {
     try {
@@ -66,9 +68,43 @@ async function handleCreateEvent(req, res) {
         }
 
         const event = new Event(eventData);
+
+        // Auto-share event with participants
+        if (category === "arrangement" && Array.isArray(participants) && participants.length > 0) {
+            event.shared_with = [];
+            
+            for (const email of participants) {
+                if (!email.trim()) continue;
+                
+                // Find user by email
+                const participantUser = await User.findOne({ email: email.trim() });
+                
+                // Generate unique share token
+                const shareToken = crypto.randomBytes(32).toString('hex');
+                
+                const shareEntry = {
+                    email: email.trim(),
+                    permission: 'view', // Participants get view-only by default
+                    accepted: true, // Auto-accept since they were explicitly added
+                    shareToken,
+                    sharedBy: req.session.user.id,
+                    sharedAt: new Date()
+                };
+                
+                if (participantUser) {
+                    shareEntry.userid = participantUser._id;
+                }
+                
+                event.shared_with.push(shareEntry);
+            }
+        }
+
         await event.save();
 
-        res.status(201).json({ message: "Event created", event });
+        res.status(201).json({ 
+            message: "Event created and shared with participants", 
+            event 
+        });
 
     } catch (err) {
         console.error(err);
