@@ -69,7 +69,7 @@ async function handleCreateEvent(req, res) {
 
         const event = new Event(eventData);
 
-        // NEW: Auto-share event with participants
+        // Auto-share event with participants
         if (category === "arrangement" && Array.isArray(participants) && participants.length > 0) {
             event.shared_with = [];
             
