@@ -12,7 +12,7 @@ export default function EditEvent({ event, onClose, onEventUpdated }) {
   const [category, setCategory] = useState(event.category || "arrangement");
   const [eventColor, setEventColor] = useState(event.color || "#4285F4");
   
-  // Arrangement fields
+  // arrangement fields
   const [startTime, setStartTime] = useState(
     event.start_time ? new Date(event.start_time).toISOString().slice(0, 16) : ""
   );
@@ -24,27 +24,27 @@ export default function EditEvent({ event, onClose, onEventUpdated }) {
     event.participants?.join(", ") || ""
   );
 
-  // Reminder fields
+  // reminder fields
   const [reminderTime, setReminderTime] = useState(
     event.reminder_time ? new Date(event.reminder_time).toISOString().slice(0, 16) : ""
   );
 
-  // Task fields
+  // task fields
   const [dueDate, setDueDate] = useState(
     event.due_date ? new Date(event.due_date).toISOString().slice(0, 16) : ""
   );
   const [isCompleted, setIsCompleted] = useState(event.is_completed || false);
 
-  // Common fields
+  // common fields
   const [description, setDescription] = useState(event.description || "");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
-    if (!title) {
+    if (!title.trim()) {
       return alert("Title is required");
     }
 
-    // Category-specific validation
+    // category-specific validation
     if (category === "arrangement" && (!startTime || !endTime)) {
       return alert("Start time and end time are required for arrangements");
     }
@@ -55,21 +55,35 @@ export default function EditEvent({ event, onClose, onEventUpdated }) {
       return alert("Due date is required for tasks");
     }
 
+    // validate participants emails if present
+    if (category === "arrangement" && participants.trim()) {
+      const emailList = participants.split(",").map(p => p.trim()).filter(p => p);
+      const emailRegex = /^\S+@\S+\.\S+$/;
+      
+      for (const email of emailList) {
+        if (!emailRegex.test(email)) {
+          return alert(`Invalid email address: ${email}`);
+        }
+      }
+    }
+
     setIsSubmitting(true);
 
     try {
       const updateData = {
-        title,
+        title: title.trim(),
         category,
         description,
         color: eventColor
       };
 
-      // Category-specific fields
+      // category-specific fields
       if (category === "arrangement") {
         updateData.start_time = new Date(startTime).toISOString();
         updateData.end_time = new Date(endTime).toISOString();
         updateData.location = location;
+        
+        // Parse and clean participants list
         updateData.participants = participants
           .split(",")
           .map(p => p.trim())
@@ -93,7 +107,13 @@ export default function EditEvent({ event, onClose, onEventUpdated }) {
         throw new Error(error.error || "Failed to update event");
       }
 
-      const updatedEvent = await response.json();
+      const data = await response.json();
+      const updatedEvent = data.event || data;
+      
+      // calendarId mapping for frontend consistency
+      if (updatedEvent.calendar_id && !updatedEvent.calendarId) {
+        updatedEvent.calendarId = updatedEvent.calendar_id;
+      }
       
       if (onEventUpdated) onEventUpdated(updatedEvent);
       onClose();
@@ -200,6 +220,14 @@ export default function EditEvent({ event, onClose, onEventUpdated }) {
               value={participants}
               onChange={(e) => setParticipants(e.target.value)}
             />
+            <small style={{ 
+              color: "#666", 
+              fontSize: "0.85rem", 
+              marginTop: "0.25rem",
+              display: "block"
+            }}>
+              Participants will automatically get access to view and edit this event
+            </small>
           </div>
         </>
       )}

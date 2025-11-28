@@ -6,7 +6,7 @@ function App() {
   return (
     <SettingsProvider>
       <Router>
-        <AppRoutes />
+        <AppRoutes/>
       </Router>
     </SettingsProvider>
   );
