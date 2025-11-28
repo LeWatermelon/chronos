@@ -131,7 +131,7 @@ export default function Calendar() {
       const allCalendars = [...(calData.myCalendars || []), ...(calData.otherCalendars || [])];
       setCalendars(allCalendars);
 
-      // NEW: Get all events for user (includes shared events)
+      // Get all events for user (includes shared events)
       const eventsResponse = await fetch('http://localhost:3000/api/events', {
         credentials: 'include',
         headers: { 'Accept': 'application/json' }
