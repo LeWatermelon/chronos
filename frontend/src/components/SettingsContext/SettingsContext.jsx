@@ -20,6 +20,9 @@ export function SettingsProvider({ children }) {
             timeFormat: user.time_format
           });
         }
+
+        console.log(settings);
+        
       })
       .catch(() => {});
   }, []);
