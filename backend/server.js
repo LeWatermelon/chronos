@@ -48,6 +48,7 @@ import handleDeleteEvent from "./controllers/event/deleteEvent.js";
 import handleShareEvent from "./controllers/event/shareEvent.js";
 import handleGetSharedEvent from "./controllers/event/getSharedEvent.js";
 import handleGenerateEventShareLink from "./controllers/event/generateShareLink.js";
+import handleGetAllUserEvents from "./controllers/event/getAllUserEvents.js"
 // ~~~ User ~~~
 import handleSearchUsers from "./controllers/user/searchUsers.js";
 import handleUpdateSettings from "./controllers/user/updateSettings.js";
@@ -86,6 +87,7 @@ async function start() {
     app.get('/api/calendars/:calendarId/members', requireAuth, (req, res) => { handleGetMembers(req, res) });
     app.get('/api/calendars/shared/:shareToken', (req, res) => { handleGetSharedCalendar(req, res) });
     app.get('/api/auth/me', (req, res) => { handleMe(req, res) });
+    app.get('/api/events', requireAuth, (req, res) => { handleGetAllUserEvents(req, res) });
 
     // === POST Requests ===
     app.post('/api/auth/register', (req, res) => { handleRegister(req, res, bcrypt, nodemailer) });

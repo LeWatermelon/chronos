@@ -117,35 +117,39 @@ export default function Calendar() {
   const fetchEvents = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/api/calendars', {
+      // First, get all calendars (for colors and metadata)
+      const calResponse = await fetch('http://localhost:3000/api/calendars', {
         credentials: 'include',
         headers: { 'Accept': 'application/json' }
       });
 
-      if (!response.ok) {
+      if (!calResponse.ok) {
         throw new Error('Failed to fetch calendars');
       }
 
-      const data = await response.json();
-      const allCalendars = [...(data.myCalendars || []), ...(data.otherCalendars || [])];
-      
-      // v tom chisle tsveta
+      const calData = await calResponse.json();
+      const allCalendars = [...(calData.myCalendars || []), ...(calData.otherCalendars || [])];
       setCalendars(allCalendars);
-      
-      const eventsPromises = allCalendars.map(calendar =>
-        fetch(`http://localhost:3000/api/events/${calendar._id}`, {
-          credentials: 'include',
-          headers: { 'Accept': 'application/json' }
-        })
-          .then(res => res.ok ? res.json() : [])
-          .then(events => events.map(event => ({ ...event, calendarId: calendar._id })))
-          .catch(() => [])
-      );
 
-      const eventsArrays = await Promise.all(eventsPromises);
-      const allEvents = eventsArrays.flat();
+      // NEW: Get all events for user (includes shared events)
+      const eventsResponse = await fetch('http://localhost:3000/api/events', {
+        credentials: 'include',
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (!eventsResponse.ok) {
+        throw new Error('Failed to fetch events');
+      }
+
+      const allEvents = await eventsResponse.json();
       
-      setAllEvents(allEvents);
+      // Map events to include calendarId for filtering
+      const eventsWithCalendarId = allEvents.map(event => ({
+        ...event,
+        calendarId: event.calendar_id
+      }));
+      
+      setAllEvents(eventsWithCalendarId);
     } catch (error) {
       console.error('Error fetching events:', error);
       setAllEvents([]);

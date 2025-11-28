@@ -1,5 +1,5 @@
 import Event from "../../database/models/Event.js";
-import hasCalendarPermission from "../../middleware/checkCalendarPermission.js";
+import checkEventPermission from "../../middleware/checkEventPermission.js";
 
 async function handleUpdateEvent(req, res) {
     try {
@@ -12,14 +12,14 @@ async function handleUpdateEvent(req, res) {
             return res.status(404).json({ error: "Event not found" });
         }
 
-        const canEdit = await hasCalendarPermission(
-            event.calendar_id._id, 
+        const canEdit = await checkEventPermission(
+            id, 
             req.session.user.id, 
             'edit'
         );
         
         if (!canEdit) {
-            return res.status(403).json({ error: "Access denied: No clearance" });
+            return res.status(403).json({ error: "Access denied: No permission to edit this event" });
         }
 
         Object.assign(event, updates);
