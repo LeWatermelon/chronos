@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Popup from '../PopUp/PopUp';
 import NewEvent from '../PopUp/NewEvent';
+import CurrentTimeLine from '../CurrentTimeLine/CurrentTimeLine';
 
 export default function DayView({ 
   onDateChange, 
@@ -268,8 +269,10 @@ export default function DayView({
           />
         </Popup>
       )}
-      <div className="calendar-container w-100">
+      <div className="calendar-container w-100" style={{ position: 'relative' }}>
         <div className="calendar-grid">
+          <CurrentTimeLine startHour={0} endHour={24} hourHeight={72} offsetTop={30} />
+
           <span className='' style={{display:'flex', justifyContent: 'center'}}>
             {currentDate.toLocaleDateString('en-US', { weekday: 'long' })}
           </span>

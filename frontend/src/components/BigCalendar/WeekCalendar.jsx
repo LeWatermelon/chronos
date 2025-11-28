@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Popup from '../PopUp/PopUp';
 import NewEvent from '../PopUp/NewEvent';
 import './WeekCalendar.css';
+import CurrentTimeLine from '../CurrentTimeLine/CurrentTimeLine';
 
 export default function WeekView({ 
   onDateChange,
@@ -285,6 +286,8 @@ export default function WeekView({
       )}
       <div className="calendar-container">
         <div className="calendar-grid">
+          <CurrentTimeLine startHour={0} endHour={24} hourHeight={72} offsetTop={75} />
+
           <div className="time-row">
             <span className='time-label'></span>
             <ul className="week">
