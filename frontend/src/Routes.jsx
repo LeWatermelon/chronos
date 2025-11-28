@@ -41,6 +41,8 @@ const AppRoutes = () => {
           <Route path='/password-reset/:token' element={<PasswordResetWithTocken />} />
           <Route path="/event/shared/:shareToken" element={<SharedEventView />} />
           <Route path="/calendar/shared/:shareToken" element={<SharedCalendarView />} />
+          <Route path="/event/shared/:shareToken" element={<SharedEventView />} />
+          <Route path="/calendar/shared/:shareToken" element={<SharedCalendarView />} />
         </Routes>
    </>
   );

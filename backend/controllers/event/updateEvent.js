@@ -14,6 +14,7 @@ async function handleUpdateEvent(req, res) {
             return res.status(404).json({ error: "Event not found" });
         }
 
+        // Check event-level permissions (includes calendar AND event sharing)
         const canEdit = await checkEventPermission(
             id, 
             req.session.user.id, 
@@ -27,60 +28,64 @@ async function handleUpdateEvent(req, res) {
         // kolkhoz
         if (updates.category === "arrangement" && updates.participants) {
             const newParticipants = Array.isArray(updates.participants) 
-                ? updates.participants 
+                ? updates.participants.filter(p => p.trim() !== "")
                 : [];
 
-            // get existing participant emails from shared_with
-            const existingParticipantEmails = event.shared_with
-                ? event.shared_with
-                    .filter(share => share.email && event.participants?.includes(share.email))
-                    .map(share => share.email)
-                : [];
+            const oldParticipants = event.participants || [];
 
-            // find participants to add (new ones not in shared_with)
-            const participantsToAdd = newParticipants.filter(
-                email => !existingParticipantEmails.includes(email)
-            );
-
-            // find participants to remove (old ones not in new list)
-            const participantsToRemove = existingParticipantEmails.filter(
-                email => !newParticipants.includes(email)
-            );
-
-            // initialize shared_with should it not exist
+            // initialize shared_with if it doesn't exist
             if (!event.shared_with) {
                 event.shared_with = [];
             }
 
-            // remove old participants from shared_with
-            if (participantsToRemove.length > 0) {
-                event.shared_with = event.shared_with.filter(
-                    share => !participantsToRemove.includes(share.email)
-                );
-            }
+            // find participants to add (in new list but not in old list)
+            const participantsToAdd = newParticipants.filter(
+                email => !oldParticipants.includes(email)
+            );
+
+            // find participants to remove (in old list but not in new list)
+            const participantsToRemove = oldParticipants.filter(
+                email => !newParticipants.includes(email)
+            );
 
             // add new participants to shared_with
             for (const email of participantsToAdd) {
                 if (!email.trim()) continue;
                 
-                const participantUser = await User.findOne({ email: email.trim() });
-                
-                const shareToken = crypto.randomBytes(32).toString('hex');
-                
-                const shareEntry = {
-                    email: email.trim(),
-                    permission: 'view',
-                    accepted: true,
-                    shareToken,
-                    sharedBy: req.session.user.id,
-                    sharedAt: new Date()
-                };
-                
-                if (participantUser) {
-                    shareEntry.userid = participantUser._id;
+                // check if already in shared_with (might have been manually shared)
+                const alreadyShared = event.shared_with.some(
+                    share => share.email === email.trim()
+                );
+
+                if (!alreadyShared) {
+                    const participantUser = await User.findOne({ email: email.trim() });
+                    const shareToken = crypto.randomBytes(32).toString('hex');
+                    
+                    const shareEntry = {
+                        email: email.trim(),
+                        permission: 'edit', // participants can edit the event
+                        accepted: true, // auto-accept
+                        shareToken,
+                        sharedBy: req.session.user.id,
+                        sharedAt: new Date()
+                    };
+                    
+                    if (participantUser) {
+                        shareEntry.userid = participantUser._id;
+                    }
+                    
+                    event.shared_with.push(shareEntry);
                 }
-                
-                event.shared_with.push(shareEntry);
+            }
+
+            // remove old participants from shared_with
+            if (participantsToRemove.length > 0) {
+                event.shared_with = event.shared_with.filter(share => {
+                    const isRemovedParticipant = participantsToRemove.includes(share.email);
+                    const isStillParticipant = newParticipants.includes(share.email);
+                    
+                    return !isRemovedParticipant || isStillParticipant;
+                });
             }
         }
 
