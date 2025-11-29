@@ -1,0 +1,26 @@
+.flex-container{
+  max-width: 450px;
+  overflow: hidden;
+}
+
+.input-square {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  width: calc(100% / 7);
+  height: calc(445px / 7);
+  min-width: 36px;
+  min-height: 36px;
+  margin-inline: 0.2em;
+  outline: none;
+  border: 1px solid #d9dfe4;
+  border-radius: 8px;
+  background-color: #e9edf1;
+  transition: box-shadow 0.2s ease;
+  font-size: 2em;
+}
+
+.input-square:focus {
+  box-shadow: 0 0 8px 1px rgba(0, 0, 0, 0.2);
+}
+
