@@ -1,6 +1,6 @@
 import Button from '../ui/Button/Button';
 import SearchView from '../ui/SearchView/SearchView';
-import CalendarSidebar from '../LeftSide/LeftSide';
+import LeftSide from '../LeftSide/LeftSide';
 import BigCalendar from '../BigCalendar/BigCalendar';
 import NewEvent from '../PopUp/NewEvent';
 import EventDetails from '../PopUp/EventDetails';
@@ -15,7 +15,7 @@ import WeekView from '../BigCalendar/WeekCalendar';
 import DayView from '../BigCalendar/DayCalendar';
 import MonthView from '../BigCalendar/MonthCalendar';
 import YearView from '../BigCalendar/YearCalendar';
-
+import CreateEventView from '../BigCalendar/CreateEvent';
 import { useSettings } from "../SettingsContext/SettingsContext";
 
 export default function Calendar() {
@@ -269,6 +269,8 @@ export default function Calendar() {
     };
 
     switch (view) {
+      case "CreateEvent": 
+        return <CreateEventView {...commonProps}  setSelectedView={setSelectedView} />;
       case "Day":
         return <DayView {...commonProps} />;
       case "Month":
@@ -324,10 +326,11 @@ export default function Calendar() {
     return (
       <div className="calendar-main">
         <div className="calendar-layout">
-          <CalendarSidebar 
+          <LeftSide 
             onDataCreated={handleDataCreated} 
             onDaySelect={handleSmallCalendarDaySelect}
             onCalendarVisibilityChange={handleCalendarVisibilityChange}
+            setSelectedView={setSelectedView}
           />
           <div className="calendar-content">
             <div style={{ padding: '20px', color: 'red' }}>
@@ -350,15 +353,15 @@ export default function Calendar() {
     <>
       <div className="calendar-main">
         <div className="calendar-layout">
-          <CalendarSidebar 
+          <LeftSide 
             onDataCreated={handleDataCreated} 
             onDaySelect={handleSmallCalendarDaySelect}
             onCalendarVisibilityChange={handleCalendarVisibilityChange}
+            setSelectedView={setSelectedView}
           />
 
           <div className="calendar-content">
             <div className="calendar-toolbar">
-              
 
               <div className="toolbar-left">
                 <Button  className="view-btn" text="Today" onClick={handleToday} />
@@ -398,7 +401,7 @@ export default function Calendar() {
                         right: 0,
                         background: "white",
                         boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                        maxHeight: "200px",
+                        maxHeight: "100px",
                         overflowY: "auto",
                         zIndex: 999,
                         borderRadius: "4px",
