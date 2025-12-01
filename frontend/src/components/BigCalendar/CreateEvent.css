@@ -1,0 +1,133 @@
+/* .inner {
+  width: 80%;
+  background: rgba(185, 195, 238, 0.5);
+}
+
+.cr-row {
+  margin: 5px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.cr-header {
+  color: rgb(42, 41, 55);
+  font-size: 30px;
+  font-weight: 300;
+}
+
+.selection {
+  margin: 1px;
+  border-radius: 5px;
+}
+.input{
+  border-radius: 5px;
+  width: 60%;
+}
+
+.cr-row-inline {
+  display: flex;
+  gap: 12px;
+}
+
+#cr-textarea {
+  min-height: 80px;
+  resize: vertical;
+} */
+
+.inner {
+  width: 80%;
+  max-width: 700px;
+  background: rgba(185, 195, 238, 0.5);
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 1em;
+}
+
+/* Header */
+.cr-header {
+  color: rgb(42, 41, 55);
+  font-size: 28px;
+  font-weight: 400;
+  margin-bottom: 1px;
+  text-align: center;
+}
+
+/* Layout rows */
+.cr-row {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+/* Inline row (start time + end time) */
+.cr-row-inline {
+  display: flex;
+  gap: 40px;
+}
+
+/* Form label */
+.cr-label {
+  font-weight: 600;
+  color: #333;
+}
+
+/* Input styles */
+.cr-input,
+#cr-textarea,
+.selection {
+  padding: 8px 10px;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  font-size: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.cr-textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Color presets */
+.color-preset-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.color-bubble {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.color-bubble.active {
+  border-color: rgb(248, 246, 246);
+}
+
+/* Submit button */
+.create-btn {
+  margin-top: 10px;
+  /* background: #2a2937; */
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.2s;
+  margin-bottom: 4em;
+}
+
+.create-btn:hover {
+  opacity: 0.85;
+}
