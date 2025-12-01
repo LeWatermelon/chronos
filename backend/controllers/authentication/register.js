@@ -3,9 +3,8 @@ import Calendar from "../../database/models/Calendar.js";
 import EmailVerification from "../../database/models/EmailVerification.js";
 
 //addited 
-import holidayFetch from "../holidays/hollidayFetch.js";
-// import handleCreateEvent from "../event/createEvent.js";
-//
+// import holidayFetch from "../holidays/hollidayFetch.js";
+
 
 async function handleRegister(req, res, bcrypt, nodemailer) {
 
@@ -85,6 +84,7 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
             members: [newUser._id]
         });
 
+       
         newUser.calendars.push(defaultCalendar._id);
         newUser.calendars.push(holidayCalendar._id);
         await newUser.save();

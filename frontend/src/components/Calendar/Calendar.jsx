@@ -60,22 +60,6 @@ export default function Calendar() {
     setSearchResults(results);
   };
 
-  // const [userSettings, setUserSettings] = useState(null);
-
-  // useEffect(() => {
-  //   fetch("http://localhost:3000/api/auth/me", { credentials: "include" })
-  //     .then(res => res.json())
-  //     .then(user => {        
-  //       if (user && user._id) {
-  //         setUserSettings({
-  //           country: user.country,
-  //           timeFormat: user.time_format
-  //         });
-  //       }
-  //     })
-  //     .catch(() => {});
-  // }, []);
-
   const { settings } = useSettings();
 
   useEffect(() => {
@@ -106,33 +90,30 @@ export default function Calendar() {
     fetchCalendars();
   }, []);
 
-  // создание дефолтного календаря -- проверить, вызывает ли создание двух на рыло
-  // const createDefaultCalendar = async () => {
-  //   try {
-  //     const response = await fetch('http://localhost:3000/api/calendars', {
-  //       method: 'POST',
-  //       headers: { 
-  //         'Content-Type': 'application/json',
-  //         'Accept': 'application/json',
-  //       },
-  //       credentials: 'include',
-  //       body: JSON.stringify({
-  //         title: 'My Calendar',
-  //         color: '#2196F3'
-  //       })
-  //     });
+  //fill holidays
+ useEffect(() => {
+  const fetchHolidays = async () => {
+    try {
+      const userId = sessionUser.id;
+      const calendarId = 2;
 
-  //     if (!response.ok) {
-  //       throw new Error('Failed to create calendar');
-  //     }
+      const res = await fetch(`/api/holidays/${calendarId}/${userId}/populate-holidays`, {
+        method: "POST",
+        credentials: "include",
+      });
 
-  //     const data = await response.json();
-  //     setCalendarId(data._id);
-  //   } catch (error) {
-  //     console.error('Error creating calendar:', error);
-  //     setError('Failed to create calendar. Please try again.');
-  //   }
-  // };
+      if (!res.ok) throw new Error("Failed to populate holidays");
+
+      console.log("Holidays populated");
+      } catch (error) {
+        console.error("Error populating holidays:", error);
+        setError("Failed to load holidays. Please check your connection.");
+      }
+    };
+
+    fetchHolidays();
+  }, []);
+
 
   // фетч ВСЁ
   const fetchEvents = async () => {

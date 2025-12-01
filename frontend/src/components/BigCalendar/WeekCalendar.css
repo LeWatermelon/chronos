@@ -17,7 +17,7 @@
 .time-row {
   display: flex;
   align-items: start;
-  margin-bottom: 0.1em;
+  margin-bottom: 0;
 }
 
 .time-label {
@@ -87,7 +87,7 @@
 
 .week-day-header{
   margin: 0;
-  padding: 0 1em;
+  padding: 0;
 }
 
 /* Stacking multiple events in same slot */

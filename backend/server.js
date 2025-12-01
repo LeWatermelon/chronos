@@ -49,6 +49,8 @@ import handleShareEvent from "./controllers/event/shareEvent.js";
 import handleGetSharedEvent from "./controllers/event/getSharedEvent.js";
 import handleGenerateEventShareLink from "./controllers/event/generateShareLink.js";
 import handleGetAllUserEvents from "./controllers/event/getAllUserEvents.js"
+// ~~~ Holiday ~~~
+import populateHolidays from "./controllers/holidays/holidaysPopulate.js"
 // ~~~ User ~~~
 import handleSearchUsers from "./controllers/user/searchUsers.js";
 import handleUpdateSettings from "./controllers/user/updateSettings.js";
@@ -104,6 +106,7 @@ async function start() {
     app.post('/api/events/:eventId/generate-share-link', requireAuth, (req, res) => { handleGenerateEventShareLink(req, res) });
     app.post('/api/calendars/:calendarId/share', requireAuth, (req, res) => { handleShareCalendar(req, res, nodemailer) });
     app.post('/api/calendars/:calendarId/generate-share-link', requireAuth, (req, res) => { handleGenerateShareLink(req, res) });
+    app.post('/api/calendars/:calendarId/:id/populate-holidays', requireAuth, (req, res) => { populateHolidays(req, res)});
 
     // === PATCH Requests ===
     app.patch('/api/calendars/:id', requireAuth, (req, res) => { handleUpdateCalendar(req, res) });
