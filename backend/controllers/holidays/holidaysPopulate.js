@@ -38,13 +38,19 @@ export default async function populateHolidays(req, res) {
       return res.status(200).json({ message: "No holidays fetched" });
 
     for (const holiday of holidays) {
+      const baseDate_start = new Date(holiday.date.iso);
+      const baseDate_end = new Date(holiday.date.iso);
+
+      baseDate_start.setHours(0,0);
+      baseDate_end.setHours(0,30);
+
       await Event.create({
         calendar_id: calendarId,
         title: holiday.name,
         description: holiday.description || "Holiday",
         category: 'arrangement',
-        start_time: new Date(holiday.date.iso),
-        end_time: new Date(holiday.date.iso),
+        start_time: baseDate_start,
+        end_time: baseDate_end,
         reminder_time: 15,
         is_all_day: true,
         reminders: [15],
