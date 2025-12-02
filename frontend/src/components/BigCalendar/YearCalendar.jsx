@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./MonthCalendar.css";
 import "./YearCalendar.css";
-import SmallCalendar from '../SmallCalendar/SmallCalendar';
+import SmallCalendarYear from '../SmallCalendar/SmallCalendarYear';
 
 export default function YearView({ onDateChange, currentDate, DaySelect }) {
   const [currYear, setCurrYear] = useState(currentDate.getFullYear());
@@ -10,6 +10,10 @@ export default function YearView({ onDateChange, currentDate, DaySelect }) {
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
   ];
+
+  useEffect(() => {
+    setCurrYear(currentDate.getFullYear());
+  }, [currentDate]);
 
   useEffect(() => {
     onDateChange({
@@ -27,7 +31,7 @@ export default function YearView({ onDateChange, currentDate, DaySelect }) {
           <ul>
             {months.map((monthName, index) => (
               <li key={monthName} className='year-month'>
-                <SmallCalendar 
+                <SmallCalendarYear 
                   variant="inCalendar" 
                   year={currYear} 
                   month={index}

@@ -20,6 +20,7 @@ import { useSettings } from "../SettingsContext/SettingsContext";
 
 export default function Calendar() {
   const [view, setSelectedView] = useState('Week');
+  const [prevView, setPrevView] = useState('');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentInfo, setCurrentInfo] = useState({
     year: null,
@@ -45,6 +46,7 @@ export default function Calendar() {
 
   const [user, setUser] = useState(null);
 
+  //search
   const handleSearch = (query) => {
     setSearchQuery(query);
 
@@ -118,8 +120,6 @@ export default function Calendar() {
   // fill holidays
   useEffect(() => {
     if (!user) return;
-
-    // console.log(`http://localhost:3000/api/${user.id}/populate-holidays`);
     
     const fetchHolidays = async () => {
       try {
@@ -218,6 +218,16 @@ export default function Calendar() {
     setShowEditEvent(true);
   };
 
+  //for create button
+  const toggleCreateEvent = () => {
+  if (view !== "CreateEvent") {
+    setPrevView(view);
+    setSelectedView("CreateEvent");
+  } else {
+    setSelectedView(prevView);
+  }
+};
+
   // рефетч данных
   const handleDataCreated = (type, data) => {
     fetchEvents();
@@ -270,7 +280,7 @@ export default function Calendar() {
 
     switch (view) {
       case "CreateEvent": 
-        return <CreateEventView {...commonProps}  setSelectedView={setSelectedView} />;
+        return <CreateEventView {...commonProps} />;
       case "Day":
         return <DayView {...commonProps} />;
       case "Month":
@@ -357,7 +367,8 @@ export default function Calendar() {
             onDataCreated={handleDataCreated} 
             onDaySelect={handleSmallCalendarDaySelect}
             onCalendarVisibilityChange={handleCalendarVisibilityChange}
-            setSelectedView={setSelectedView}
+           
+            ontoggleCreateEvent={toggleCreateEvent}
           />
 
           <div className="calendar-content">

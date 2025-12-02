@@ -6,7 +6,7 @@ import PopupController from '../PopUp/PopUpController';
 
 import './LeftSide.css';
 
-const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange, setSelectedView }) => {
+const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange, ontoggleCreateEvent}) => {
   const [myCalendarsOpen, setMyCalendarsOpen] = useState(true);
   const [otherCalendarsOpen, setOtherCalendarsOpen] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
@@ -157,7 +157,6 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange, setS
       .catch(err => console.error("Failed to update calendar:", err));
     };
 
-
   return (
     <div className={`left-side ${collapsed ? 'collapsed' : ''}`}>
       <button
@@ -176,8 +175,8 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange, setS
 
         <div className="header mt-5">
           {/* <button className="menu-item mr-4" onClick={(e) => openPopup("event", e)}> */}
-          <button className="menu-item mr-4" onClick={() => setSelectedView("CreateEvent")}>
-
+          <button className="menu-item mr-4" 
+             onClick={ontoggleCreateEvent}>
             <span className="menu-text gap-1">Create event </span>
             <i className="fa-solid fa-chevron-right white"></i>
           </button>

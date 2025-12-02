@@ -1,12 +1,17 @@
 import { useState, useEffect } from "react";
 import "./SmallCalendar.css";
 
-export default function SmallCalendar({ variant='default', year, month, onDaySelect }) {
+export default function SmallCalendar({ variant='inCalendar', year, month, onDaySelect }) {
   const today = new Date();
   const [currMonth, setCurrMonth] = useState(month ?? today.getMonth()); 
   const [currYear, setCurrYear] = useState(year ?? today.getFullYear());
 
     // Sync internal state with props
+  useEffect(() => {
+    setCurrMonth(month);
+    setCurrYear(year);
+  }, [month, year]);
+
   const months = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
@@ -57,23 +62,23 @@ export default function SmallCalendar({ variant='default', year, month, onDaySel
   }
   const days = getDays();
 
-  const handlePrevNext = (direction) => {
-    if (variant === "inCalendar") return;
+  // const handlePrevNext = (direction) => {
+  //   if (variant === "inCalendar") return;
 
-    let newMonth = direction === "prev" ? currMonth - 1 : currMonth + 1;
-    let newYear = currYear;
+  //   let newMonth = direction === "prev" ? currMonth - 1 : currMonth + 1;
+  //   let newYear = currYear;
 
-    if (newMonth < 0) {
-      newMonth = 11;
-      newYear -= 1;
-    } else if (newMonth > 11) {
-      newMonth = 0;
-      newYear += 1;
-    }
+  //   if (newMonth < 0) {
+  //     newMonth = 11;
+  //     newYear -= 1;
+  //   } else if (newMonth > 11) {
+  //     newMonth = 0;
+  //     newYear += 1;
+  //   }
 
-    setCurrMonth(newMonth);
-    setCurrYear(newYear);
-  };
+  //   setCurrMonth(newMonth);
+  //   setCurrYear(newYear);
+  // };
 
   return (
    <div className={`calendar-box ${variant}`}>
@@ -88,14 +93,14 @@ export default function SmallCalendar({ variant='default', year, month, onDaySel
             </span>
           </div>
 
-          <div className="calendar-header-right">
+          {/* <div className="calendar-header-right">
             {variant === "default" && (
               <>
                 <i className="fa-solid fa-chevron-left calendar-arrow" onClick={() => handlePrevNext("prev")}></i>
                 <i className="fa-solid fa-chevron-right calendar-arrow" onClick={() => handlePrevNext("next")}></i>
               </>
             )}
-          </div>
+           </div>*/}
         </div>
 
         {/* Week Labels */}

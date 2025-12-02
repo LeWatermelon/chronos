@@ -4,9 +4,9 @@
 }
 
 .input-square {
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
+  display: flex;
+  justify-items: center;
+  align-items: center;
   width: calc(100% / 7);
   height: calc(445px / 7);
   min-width: 36px;
