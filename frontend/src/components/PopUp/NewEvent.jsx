@@ -39,9 +39,13 @@ export default function NewEvent({
 
   useEffect(() => {
     if (propCalendarId) {
-      setCalendarId(propCalendarId);
+      // Validate that the provided calendar ID is not a holiday/readonly calendar
+      const calendar = [...myCalendars, ...otherCalendars].find(c => c._id === propCalendarId);
+      if (calendar && !calendar.is_holiday_calendar && !calendar.is_readonly) {
+        setCalendarId(propCalendarId);
+      }
     }
-  }, [propCalendarId]);
+  }, [propCalendarId, myCalendars, otherCalendars]);
 
   useEffect(() => {
     fetch(`http://localhost:3000/api/calendars`, {

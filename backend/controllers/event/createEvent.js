@@ -27,9 +27,9 @@ async function handleCreateEvent(req, res) {
             return res.status(404).json({ error: "Calendar not found" });
         }
 
-        if (event.is_system_holiday || event.is_readonly) {
+        if (calendar.is_holiday_calendar || calendar.is_readonly) {
             return res.status(403).json({ 
-                error: "Cannot edit system holiday events" 
+                error: "Cannot create events in this calendar" 
             });
         }
 
