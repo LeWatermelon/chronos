@@ -1,5 +1,8 @@
 node_modules/
+mongo-data/
 backend/node_modules/
 frontend/node_modules/
 .vscode/
+.idea/
 .env
+package-lock.json
