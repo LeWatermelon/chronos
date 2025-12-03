@@ -64,32 +64,32 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
                 country: country.toLowerCase(),
                 time_format: time_format
             });
+			
+			const defaultCalendar = await Calendar.create({
+				owner: newUser._id,
+				title: `Main calendar`,
+				color: "#2196F3",
+				is_visible: true,
+				members: []
+			});
+
+			//this aria addited by polina, could brake all code 
+			//create holliday calendar 
+			const holidayCalendar = await Calendar.create({
+				owner: newUser._id,
+				title: `holiday calendar`,
+				color: "#018659",
+				is_visible: true,
+				members: [newUser._id],
+				is_system_holiday: true,
+				is_readonly: true
+			});
+
+		   
+			newUser.calendars.push(defaultCalendar._id);
+			newUser.calendars.push(holidayCalendar._id);
+			await newUser.save();
         }
-
-        const defaultCalendar = await Calendar.create({
-            owner: newUser._id,
-            title: `Main calendar`,
-            color: "#2196F3",
-            is_visible: true,
-            members: []
-        });
-
-        //this aria addited by polina, could brake all code 
-        //create holliday calendar 
-        const holidayCalendar = await Calendar.create({
-            owner: newUser._id,
-            title: `holiday calendar`,
-            color: "#018659",
-            is_visible: true,
-            members: [newUser._id],
-            is_system_holiday: true,
-            is_readonly: true
-        });
-
-       
-        newUser.calendars.push(defaultCalendar._id);
-        newUser.calendars.push(holidayCalendar._id);
-        await newUser.save();
 
         // сгенерировать 6-значный код и срок действия
         const code = Math.floor(100000 + Math.random() * 900000).toString();
