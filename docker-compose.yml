@@ -20,6 +20,7 @@ services:
       - "3000:3000"
     environment:
       - MONGODB_URI=mongodb://mongo:27017/chronos
+      - SESSION_SECRET=${SESSION_SECRET}
       - NODE_ENV=development
     depends_on:
       - mongo

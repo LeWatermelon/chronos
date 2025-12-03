@@ -73,7 +73,7 @@ async function start() {
         cookie: { secure: false }             // для разработки secure: false, в проде с HTTPS нужно secure: true
     }));
     app.use(cors({
-        origin: 'http://localhost:5173',
+        origin: ['http://localhost:5173', 'http://frontend:5173'],
         credentials: true
     }));
 
