@@ -333,6 +333,7 @@ export default function WeekView({
   const hrs = settings.timeFormat === "24"
     ? Array.from({ length: 24 }, (_, i) => i)
     : [
+		"12AM",
         ...Array.from({ length: 11 }, (_, i) => `${i + 1}AM`),
         "12PM",
         ...Array.from({ length: 11 }, (_, i) => `${i + 1}PM`)
